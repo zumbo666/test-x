@@ -1,0 +1,14 @@
+name: Test
+
+on:
+  push:
+    tags:        
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Hello
+        run: echo "Hello!"
