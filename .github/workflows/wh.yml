@@ -1,0 +1,12 @@
+name: My Webhook Triggered Action
+
+on:
+  repository_dispatch:
+    types: [my-event-type]
+
+jobs:
+  my-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Payload
+        run: echo ${{ github.event.client_payload }}
