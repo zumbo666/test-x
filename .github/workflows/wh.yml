@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Install Cmdlets
         shell: powershell
-        run: Install-Module -Name SignPath
+        run: Install-Module -Name SignPath -Scope CurrentUser -Force
 
       - name: Download Signed Artifact
         run: |
