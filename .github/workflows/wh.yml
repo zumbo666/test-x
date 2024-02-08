@@ -2,21 +2,26 @@ name: My Webhook Triggered Action
 
 on:
   repository_dispatch:
-    types: [my-event-type]
+    types: [signature-response]
 
 jobs:
   my-job:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-      - name: Print Payload
-        run: |
-          ORGANIZATION_ID="${{ github.event.client_payload.OrganizationId }}"
-          SIGNING_REQUEST_ID="${{ github.event.client_payload.SigningRequestId }}"
-          SP_API_TOKEN="${{ secrets.SP_API_TOKEN }}"
+      - name: Install Cmdlets
+        shell: powershell
+        run: Install-Module -Name SignPath
 
-          curl -H "Authorization: Bearer $SP_API_TOKEN" \
-          -o "artifact.zip" \
-          https://app.signpath.io/API/v1/$ORGANIZATION_ID/SigningRequests/$SIGNING_REQUEST_ID/SignedArtifact
+      - name: Download Signed Artifact
+        run: |
+          $ORGANIZATION_ID="${{ github.event.client_payload.OrganizationId }}"
+          $signingRequestID="${{ github.event.client_payload.SigningRequestId }}"
+          $SP_API_TOKEN="${{ secrets.SP_API_TOKEN }}"
+
+          Get-SignedArtifact `
+          -OrganizationId $ORGANIZATION_ID -ApiToken $SP_API_TOKEN `
+          -SigningRequestId $signingRequestID `
+          -OutputArtifactPath artifact.zip
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
