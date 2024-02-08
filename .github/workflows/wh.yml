@@ -9,4 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print Payload
-        run: echo "The value of 'key' is ${{ github.event.client_payload.key }}"
+        run: |
+          ORGANIZATION_ID=${{ github.event.client_payload.OrganizationId }}
+          $SIGNING_REQUEST_ID=${{ github.event.client_payload.SigningRequestId }}
+          $SP_API_TOKEN=${{ secrets.SP_API_TOKEN }}
+
+          curl -H "Authorization: Bearer $SP_API_TOKEN" \
+          -o "artifact.zip" \
+          https://app.signpath.io/API/v1/$ORGANIZATION_ID/SigningRequests/$SIGNING_REQUEST_ID/SignedArtifact
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: artifact.zip
+          
