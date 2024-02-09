@@ -13,6 +13,7 @@ jobs:
         run: Install-Module -Name SignPath -Scope CurrentUser -Force
 
       - name: Download Signed Artifact
+        shell: powershell
         run: |
           $ORGANIZATION_ID="${{ github.event.client_payload.OrganizationId }}"
           $signingRequestID="${{ github.event.client_payload.SigningRequestId }}"
