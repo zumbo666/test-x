@@ -16,6 +16,8 @@ jobs:
           command: echo "Hi I'm on Runners! sajjdsk"
 
   build:
+    machine: true
+    resource_class: fy9havcxxh2v26vozdiaju/res
     steps:
       - run:
           name: Install Deps
