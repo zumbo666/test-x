@@ -21,6 +21,6 @@ jobs:
     steps:
       - run:
           name: Install Deps
-          command: sudo port install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool openexr openexr openjpeg webp libraw ghostscript
+          command: sudo port install pkgconfig freetype libjpeg-turbo libheif libpng tiff libtool openexr openjpeg webp libraw ghostscript
 
         
