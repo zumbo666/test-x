@@ -1,11 +1,12 @@
 version: 2.1
+
 workflows:
-  testing:
+  build-workflow:
     jobs:
-      - runner-test
+      - runner
 jobs:
-  runner-test:
+  runner:
     machine: true
     resource_class: fy9havcxxh2v26vozdiaju/res
     steps:
-      - run: echo "Hi I'm on Runners! Ciaones!"
+      - run: echo "Hi I'm on Runners!"
