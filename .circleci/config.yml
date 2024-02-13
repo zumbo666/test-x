@@ -9,4 +9,12 @@ jobs:
     machine: true
     resource_class: fy9havcxxh2v26vozdiaju/res
     steps:
-      - run: echo "Hi I'm on Runners! sajjdsk"
+      - run: 
+        name: Greetings
+        command: echo "Hi I'm on Runners! sajjdsk"
+
+      - run:
+        name: Install Deps
+        command: port install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool openexr openexr openjpeg webp libraw ghostscript
+
+        
