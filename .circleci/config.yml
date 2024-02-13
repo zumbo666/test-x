@@ -12,8 +12,8 @@ jobs:
     resource_class: fy9havcxxh2v26vozdiaju/res
     steps:
       - run: 
-        name: Greetings
-        command: echo "Hi I'm on Runners! sajjdsk"
+          name: Greetings
+          command: echo "Hi I'm on Runners! sajjdsk"
 
   build:
     steps:
