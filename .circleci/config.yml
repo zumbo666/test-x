@@ -4,6 +4,8 @@ workflows:
   build-workflow:
     jobs:
       - runner
+      - build
+
 jobs:
   runner:
     machine: true
@@ -13,6 +15,8 @@ jobs:
         name: Greetings
         command: echo "Hi I'm on Runners! sajjdsk"
 
+  build:
+    steps:
       - run:
         name: Install Deps
         command: port install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool openexr openexr openjpeg webp libraw ghostscript
