@@ -34,23 +34,32 @@ jobs:
         run: |
           $ORGANIZATION_ID="${{ github.event.client_payload.OrganizationId }}"
           $signingRequestID="${{ github.event.client_payload.SigningRequestId }}"
+          $status="${{ github.event.client_payload.Status }}"
           $SP_API_TOKEN="${{ secrets.SP_API_TOKEN }}"
 
-          Get-SignedArtifact `
-          -OrganizationId $ORGANIZATION_ID -ApiToken $SP_API_TOKEN `
-          -SigningRequestId $signingRequestID `
-          -OutputArtifactPath artifact.zip
+          if ($status -eq "Completed") {
+              Write-Output "The artifact has been signed correctly! ($status)"
+
+              Get-SignedArtifact `
+                -OrganizationId $ORGANIZATION_ID -ApiToken $SP_API_TOKEN `
+                -SigningRequestId $signingRequestID `
+                -OutputArtifactPath artifact.zip
+          } else {
+              Write-Output "The artifact was not signed correctly! ($status)"
+              exit 1
+          }
 
       - name: Create Release Versions
         shell: powershell
         run: |
-          $versionNumber=${{ steps.converseen-version.outputs.version }}  
+          $versionNumber=${{ steps.converseen-version.outputs.ver }}  
         
           Expand-Archive -Path artifact.zip -DestinationPath . -Force
           cd artifact
 
           # Extract portable version
           Expand-Archive -Path Converseen.zip -DestinationPath . -Force
+          Remove-Item -Path Converseen.zip
           # Create settings directory for portable version
           mkdir Converseen\settings
 
