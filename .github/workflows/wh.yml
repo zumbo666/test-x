@@ -8,7 +8,7 @@ jobs:
   prepare-codesigned-artifacts:
     runs-on: windows-latest
     outputs:
-      output_version: ${{ steps.set-env.outputs.ver }}
+      output_version: ${{ steps.converseen-version.outputs.ver }}
     steps:
       - name: Install Cmdlets
         shell: powershell
@@ -80,5 +80,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: my-artifact
+          name: signed-artifacts
           path: release
