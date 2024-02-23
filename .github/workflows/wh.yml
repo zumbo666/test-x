@@ -25,7 +25,7 @@ jobs:
         shell: powershell
         run: |
           $versionNumber = Get-Content -Path "Converseen\package\Windows\version.txt" -TotalCount 1
-          echo "version=$versionNumber" >> $env:GITHUB_OUTPUT
+          echo "ver=$versionNumber" >> $env:GITHUB_OUTPUT
 
           Write-Output "Windows version found: $versionNumber"
 
