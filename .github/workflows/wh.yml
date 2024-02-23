@@ -7,10 +7,27 @@ on:
 jobs:
   my-job:
     runs-on: windows-latest
+    outputs:
+      output_version: ${{ steps.set-env.outputs.ver }}
     steps:
       - name: Install Cmdlets
         shell: powershell
         run: Install-Module -Name SignPath -Scope CurrentUser -Force
+
+      - name: Checkout Converseen
+        uses: actions/checkout@v4
+        with:
+          repository: Faster3ck/Converseen
+          path: Converseen
+
+      - name: Get Converseen Version Number
+        id: converseen-version
+        shell: powershell
+        run: |
+          $versionNumber = Get-Content -Path "Converseen\package\Windows\version.txt" -TotalCount 1
+          echo "version=$versionNumber" >> $env:GITHUB_OUTPUT
+
+          Write-Output "Windows version found: $versionNumber"
 
       - name: Download Signed Artifact
         shell: powershell
@@ -24,9 +41,35 @@ jobs:
           -SigningRequestId $signingRequestID `
           -OutputArtifactPath artifact.zip
 
+      - name: Create Release Versions
+        shell: powershell
+        run: |
+          $versionNumber=${{ steps.converseen-version.outputs.version }}  
+        
+          Expand-Archive -Path artifact.zip -DestinationPath . -Force
+          cd artifact
+
+          # Extract portable version
+          Expand-Archive -Path Converseen.zip -DestinationPath . -Force
+          # Create settings directory for portable version
+          mkdir Converseen\settings
+
+          # Rename files
+          Rename-Item -Path "Converseen" -NewName "converseen-$versionNumber-win32-portable"
+          Rename-Item -Path "Converseen.msi" -NewName "Converseen-$versionNumber-win32-setup.msi"
+
+          # Compress portable version
+          Compress-Archive -Path "converseen-$versionNumber-win32-portable" -DestinationPath "converseen-$versionNumber-win32-portable.zip"
+
+          # Prepare release artifact
+          cd ../
+
+          mkdir release
+          cp artifact\*.zip release
+          cp artifact\*.msi release
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: my-artifact
-          path: artifact.zip
-          
+          path: release
