@@ -53,6 +53,10 @@ jobs:
         shell: powershell
         run: |
           $versionNumber=${{ steps.converseen-version.outputs.ver }}  
+
+          Write-Output "--- Version: $versionNumber ---"
+          Write-Output "--- Portable Name: converseen-$versionNumber-win32-portable ---"
+          Write-Output "--- Installer Name: Converseen-$versionNumber-win32-setup.msi ---"
         
           Expand-Archive -Path artifact.zip -DestinationPath . -Force
           cd artifact
