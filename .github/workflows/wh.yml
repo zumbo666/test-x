@@ -1,11 +1,11 @@
-name: My Webhook Triggered Action
+name: Release Codesigned Converseen for Windows
 
 on:
   repository_dispatch:
     types: [signature-response]
 
 jobs:
-  my-job:
+  prepare-codesigned-artifacts:
     runs-on: windows-latest
     outputs:
       output_version: ${{ steps.set-env.outputs.ver }}
