@@ -4,6 +4,9 @@ on:
   repository_dispatch:
     types: [signature-response]
 
+permissions:
+  contents: write
+
 jobs:
   prepare-codesigned-artifacts:
     runs-on: windows-latest
@@ -102,3 +105,35 @@ jobs:
         with:
           name: signed-artifacts
           path: release
+
+  create_release:
+    name: 'Create release'
+    needs:
+      - prepare-codesigned-artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Converseen
+      uses: actions/checkout@v4
+      
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: signed-artifacts
+        path: artifacts
+
+    - name: 'Get Previous tag'
+      id: previoustag
+      uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      with:
+        fallback: "v${{ needs.build-converseen.outputs.output_version }}"
+
+    - name: Publish Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: "${{ steps.previoustag.outputs.tag }}"
+        files: |
+          artifacts/Converseen-*-win32-setup.exe
+          artifacts/converseen-*.zip
+
+          
