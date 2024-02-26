@@ -65,11 +65,11 @@ jobs:
         shell: powershell
         run: |
           $versionNumber=${{ steps.converseen-version.outputs.version }}
-          $buildNNumber=${{ steps.converseen-version.outputs.build }}
+          $buildNumber=${{ steps.converseen-version.outputs.build }}
 
           Write-Output "--- Version: $versionNumber ---"
-          Write-Output "--- Portable Name: converseen-$versionNumber-win32-portable ---"
-          Write-Output "--- Installer Name: Converseen-$versionNumber-win32-setup.msi ---"
+          Write-Output "--- Portable Name: converseen-$versionNumber-$buildNumber-win32-portable ---"
+          Write-Output "--- Installer Name: Converseen-$versionNumber-$buildNumber-win32-setup.msi ---"
         
           Expand-Archive -Path artifact.zip -DestinationPath . -Force
           cd artifact
@@ -81,11 +81,11 @@ jobs:
           mkdir Converseen\settings
 
           # Rename files
-          Rename-Item -Path "Converseen" -NewName "converseen-$versionNumber-$buildNNumber-win32-portable"
-          Rename-Item -Path "Converseen.msi" -NewName "Converseen-$versionNumber-$buildNNumber-win32-setup.msi"
+          Rename-Item -Path "Converseen" -NewName "converseen-$versionNumber-$buildNumber-win32-portable"
+          Rename-Item -Path "Converseen.msi" -NewName "Converseen-$versionNumber-$buildNumber-win32-setup.msi"
 
           # Compress portable version
-          Compress-Archive -Path "converseen-$versionNumber-$buildNNumber-win32-portable" -DestinationPath "converseen-$versionNumber-$buildNNumber-win32-portable.zip"
+          Compress-Archive -Path "converseen-$versionNumber-$buildNumber-win32-portable" -DestinationPath "converseen-$versionNumber-$buildNumber-win32-portable.zip"
 
           # Prepare release artifact
           cd ../
