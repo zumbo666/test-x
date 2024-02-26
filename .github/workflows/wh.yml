@@ -64,12 +64,15 @@ jobs:
       - name: Create Release Versions
         shell: powershell
         run: |
-          $versionNumber=${{ steps.converseen-version.outputs.version }}
-          $buildNumber=${{ steps.converseen-version.outputs.build }}
+          $env:versionNumber=${{ steps.converseen-version.outputs.version }}
+          $env:buildNumber=${{ steps.converseen-version.outputs.build }}
 
-          Write-Output "--- Version: $versionNumber ---"
-          Write-Output "--- Portable Name: converseen-$versionNumber-$buildNumber-win32-portable ---"
-          Write-Output "--- Installer Name: Converseen-$versionNumber-$buildNumber-win32-setup.msi ---"
+          $env:installerName="converseen-$env:versionNumber-$env:buildNumber-win32-portable"
+          $env:portableName="Converseen-$env:versionNumber-$env:buildNumber-win32-setup"
+
+          Write-Output "--- Version: $env:versionNumber ---"
+          Write-Output "--- Installer Name: $env:installerName ---"
+          Write-Output "--- Portable Name: $env:portableName ---"
         
           Expand-Archive -Path artifact.zip -DestinationPath . -Force
           cd artifact
@@ -81,11 +84,11 @@ jobs:
           mkdir Converseen\settings
 
           # Rename files
-          Rename-Item -Path "Converseen" -NewName "converseen-$versionNumber-$buildNumber-win32-portable"
-          Rename-Item -Path "Converseen.msi" -NewName "Converseen-$versionNumber-$buildNumber-win32-setup.msi"
+          Rename-Item -Path "Converseen" -NewName "$env:portableName"
+          Rename-Item -Path "Converseen.msi" -NewName "$env:installerName.msi"
 
           # Compress portable version
-          Compress-Archive -Path "converseen-$versionNumber-$buildNumber-win32-portable" -DestinationPath "converseen-$versionNumber-$buildNumber-win32-portable.zip"
+          Compress-Archive -Path "$env:portableName" -DestinationPath "$env:portableName.zip"
 
           # Prepare release artifact
           cd ../
