@@ -8,7 +8,7 @@ jobs:
   prepare-codesigned-artifacts:
     runs-on: windows-latest
     outputs:
-      output_version: ${{ steps.converseen-version.outputs.ver }}
+      output_version: ${{ steps.converseen-version.outputs.version }}
     steps:
       - name: Install Cmdlets
         shell: powershell
@@ -25,9 +25,21 @@ jobs:
         shell: powershell
         run: |
           $versionNumber = Get-Content -Path "Converseen\package\Windows\version.txt" -TotalCount 1
-          echo "ver=$versionNumber" >> $env:GITHUB_OUTPUT
 
-          Write-Output "Windows version found: $versionNumber"
+          $pattern = '^(\d+\.\d+\.\d+\.\d+)-(\d+)$'
+          
+          if ($versionNumber -match $pattern) {
+              $versionNumber = $matches[1]
+              $buildNumber = $matches[2]
+
+              echo "version=$versionNumber" >> $env:GITHUB_OUTPUT
+              echo "build=$buildNumber" >> $env:GITHUB_OUTPUT
+          
+              Write-Host "Version: $versionNumber"
+              Write-Host "Build Number: $buildNumber"
+          } else {
+              Write-Host "Warning: No match found."
+          }
 
       - name: Download Signed Artifact
         shell: powershell
@@ -52,7 +64,8 @@ jobs:
       - name: Create Release Versions
         shell: powershell
         run: |
-          $versionNumber=${{ steps.converseen-version.outputs.ver }}  
+          $versionNumber=${{ steps.converseen-version.outputs.version }}
+          $buildNNumber==${{ steps.converseen-version.outputs.build }}
 
           Write-Output "--- Version: $versionNumber ---"
           Write-Output "--- Portable Name: converseen-$versionNumber-win32-portable ---"
