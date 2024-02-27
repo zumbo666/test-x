@@ -122,11 +122,15 @@ jobs:
         name: signed-artifacts
         path: artifacts
 
-    - name: 'Get Previous tag'
+    - name: Read Version
+      run: |
+        echo "Version: v${{ needs.prepare-codesigned-artifacts.outputs.output_version }}"
+
+    - name: Get Previous tag
       id: previoustag
       uses: "WyriHaximus/github-action-get-previous-tag@v1"
       with:
-        fallback: "v${{ needs.build-converseen.outputs.output_version }}"
+        fallback: "v${{ needs.prepare-codesigned-artifacts.outputs.output_version }}"
 
     - name: Publish Release
       uses: softprops/action-gh-release@v1
