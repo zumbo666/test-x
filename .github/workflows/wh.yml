@@ -70,8 +70,8 @@ jobs:
           $env:versionNumber='${{ steps.converseen-version.outputs.version }}'
           $env:buildNumber='${{ steps.converseen-version.outputs.build }}'
 
-          $env:installerName="converseen-$env:versionNumber-$env:buildNumber-win32-portable"
-          $env:portableName="Converseen-$env:versionNumber-$env:buildNumber-win32-setup"
+          $env:installerName="Converseen-$env:versionNumber-$env:buildNumber-win32-setup"
+          $env:portableName="converseen-$env:versionNumber-$env:buildNumber-win32-portable"
 
           Write-Output "--- Version: $env:versionNumber ---"
           Write-Output "--- Installer Name: $env:installerName ---"
@@ -137,7 +137,7 @@ jobs:
       with:
         tag_name: "${{ steps.previoustag.outputs.tag }}"
         files: |
-          artifacts/Converseen-*-win32-setup.exe
+          artifacts/Converseen-*-win32-setup.msi
           artifacts/converseen-*.zip
 
           
