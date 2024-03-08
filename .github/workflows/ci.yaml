@@ -121,10 +121,10 @@ jobs:
         arch: 'clang_64'
 
     - name: Checkout Converseen
-        uses: actions/checkout@v4
-        with:
-          repository: Faster3ck/Converseen
-          path: Converseen
+      uses: actions/checkout@v4
+      with:
+        repository: Faster3ck/Converseen
+        path: Converseen
 
     - name: Set Environment
       id: set-env
