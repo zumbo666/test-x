@@ -36,6 +36,7 @@ jobs:
 
       - name: Build Converseen
         run: |
+          cd Converseen
           cd package/AppImage
           
           chmod a+x build-with-qmake.sh
