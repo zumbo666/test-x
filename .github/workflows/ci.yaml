@@ -1,3 +1,5 @@
+name: Converseen CI
+
 on:
   push:
     tags:        
