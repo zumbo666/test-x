@@ -25,7 +25,7 @@ jobs:
 
     - name: Install Qt
       run: |
-        curl -O https://download.qt.io/official_releases/online_installers/qt-unified-mac-x64-online.dmg
+        curl -LO https://download.qt.io/official_releases/online_installers/qt-unified-mac-x64-online.dmg
 
         chmod a+x qt-unified-mac-x64-online.dmg
         
