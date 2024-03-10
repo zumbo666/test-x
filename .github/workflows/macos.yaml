@@ -1,4 +1,4 @@
-name: Converseen CI
+name: Converseen macOS Test
 
 on:
   push:
