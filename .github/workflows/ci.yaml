@@ -43,10 +43,8 @@ jobs:
           cd package/AppImage
           
           chmod a+x build-with-qmake.sh
-          chmod a+x finalize-appimage.sh
           
           ./build-with-qmake.sh
-          ./finalize-appimage.sh
 
   build-windows:
     name: Converseen Windows Build
