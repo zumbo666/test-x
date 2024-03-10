@@ -21,7 +21,7 @@ jobs:
         set -e
         
         export HOMEBREW_NO_AUTO_UPDATE=1
-        brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool openexr openexr openjpeg webp libraw ghostscript
+        brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool openexr openexr openjpeg webp libraw ghostscript aqt
 
     - name: Install Qt
       shell: bash
