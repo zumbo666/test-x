@@ -28,7 +28,7 @@ jobs:
         curl -LO https://download.qt.io/official_releases/online_installers/qt-unified-mac-x64-online.dmg
         
         hdiutil attach qt-unified-mac-x64-online.dmg 
-        ./Volumes/qt-unified-macOS-x64-4.7.0-online/qt-unified-macOS-x64-4.7.0-online.app/Contents/MacOS/qt-unified-macOS-x64-4.7.0-online⁩ \
+        ./Volumes/qt-unified-macOS-x64-4.7.0-online/qt-unified-macOS-x64-4.7.0-online.app/Contents/MacOS/qt-unified-macOS-x64-4.7.0-online \
           --accept-licenses \
           --default-answer \
           --confirm-command install \
