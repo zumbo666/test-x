@@ -24,17 +24,16 @@ jobs:
         brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool openexr openexr openjpeg webp libraw ghostscript
 
     - name: Install Qt
-      shell: bash
       run: |     
         curl -LO https://download.qt.io/official_releases/online_installers/qt-unified-mac-x64-online.dmg
-
-        #chmod a+x qt-unified-mac-x64-online.dmg
         
-        ./qt-unified-mac-x64-online.dmg \
+        hdiutil attach qt-unified-mac-x64-online.dmg 
+        ./Volumes/qt-unified-mac-x64-online/qt-unified-mac-x64-online.app/Contents/MacOS/qt-unified-mac-x64-online \
           --accept-licenses \
           --default-answer \
           --confirm-command install \
           qt.qt6.670.clang_64
+        hdiutil detach /Volumes/qt-unified-mac-x64-online
 
     - name: Checkout Converseen
       uses: actions/checkout@v4
