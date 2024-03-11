@@ -25,19 +25,16 @@ jobs:
 
     - name: Install Qt
       shell: bash
-      run: |
-        pip install aqtinstall
-        aqt install-qt mac desktop 6.7.0 clang_64
-      
-        #curl -LO https://download.qt.io/official_releases/online_installers/qt-unified-mac-x64-online.dmg
+      run: |     
+        curl -LO https://download.qt.io/official_releases/online_installers/qt-unified-mac-x64-online.dmg
 
         #chmod a+x qt-unified-mac-x64-online.dmg
         
-        #./qt-unified-mac-x64-online.dmg \
-        #  --accept-licenses \
-        #  --default-answer \
-        #  --confirm-command install \
-        #  qt.qt6.670.clang_64
+        ./qt-unified-mac-x64-online.dmg \
+          --accept-licenses \
+          --default-answer \
+          --confirm-command install \
+          qt.qt6.670.clang_64
 
     - name: Checkout Converseen
       uses: actions/checkout@v4
