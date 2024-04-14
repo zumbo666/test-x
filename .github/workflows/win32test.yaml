@@ -1,0 +1,111 @@
+name: Converseen CI
+
+on:
+  push:
+    tags:        
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    name: Converseen Windows Build
+    runs-on: windows-2022
+
+    steps:
+      - name: Download ImageMagick for Windows
+        shell: powershell
+        run: |
+          # Get latest version number from GitHub
+          $gitTags = git ls-remote --sort="version:refname" --tags https://github.com/ImageMagick/ImageMagick.git
+          $lastTagLine = $gitTags[-1]
+          $lastTagVersion = $lastTagLine -replace '.*refs/tags/(.*)', '$1'
+          $latestVersionNumber = $lastTagVersion
+          
+          Write-Host "Latest ImageMagick Version Found: $latestVersionNumber"
+          
+          Invoke-WebRequest -Uri "https://imagemagick.org/archive/binaries/ImageMagick-$latestVersionNumber-Q16-HDRI-x86-dll.exe" -OutFile ImageMagick-Installer.exe
+
+      - name: Install ImageMagick for Windows
+        shell: cmd
+        run: |
+          ImageMagick-Installer.exe /MERGETASKS=install_devel /VERYSILENT /DIR=ImageMagick
+
+      - name: Recreate lib files
+        shell: powershell
+        run: |
+          cd "${{ github.workspace }}\ImageMagick"
+          mkdir lib
+        
+          $imPath = "${{ github.workspace }}\ImageMagick"
+          $destDir = "lib"
+          $ImageMagickTargets = @("CORE_RL_Magick++_", "CORE_RL_MagickCore_", "CORE_RL_MagickWand_")
+          $arch = "x86"
+          
+          foreach ($imTarget in $ImageMagickTargets) {
+              Write-Host "*--- Processing $imTarget.dll`n---"
+          	
+          	# dumpbin ImageMagick DLL
+          	dumpbin /exports "$imPath\$imTarget.dll" > $destDir\$imTarget.txt
+          	
+          	# Print useful data from dump
+          	Get-Content -Path "$destDir\$imTarget.txt" | Select-Object -Skip 4 -First 12
+          	
+          	# Create def file
+          	$filePath = "$destDir\$imTarget.txt"
+          	$outputFilePath = "$destDir\$imTarget.def"
+          
+          	$lines = Get-Content -Path $filePath
+          
+          	$filteredLines = @()
+          	$filteredLines += "EXPORTS"
+          
+          	foreach ($line in $lines) {
+          		if ($line -match "^\s+\d+\s+[0-9A-Fa-f]+\s[0-9A-Fa-f]+\s.*$") {
+          			$strLine = $matches[0] -split '\s+'
+          
+          			$filteredLines += $strLine[4]
+          		}
+          	}
+          	
+          	$filteredLines | Out-File -FilePath $outputFilePath
+          	
+          	# Get number of lines to match number of functions
+          	$nLines = (Get-Content -Path $outputFilePath | Measure-Object -Line).Lines - 1
+          	Write-Host "$filePath functions found: $nLines"
+          	
+          	# Finally, create the missing .lib files for the linker!
+          	Write-Host "*** Creating $imTarget.lib"
+          	lib /MACHINE:$arch /def:lib\$imTarget.def /OUT:lib\$imTarget.lib
+          	
+          	Write-Host "---"
+          }
+    
+      - name: Checkout Converseen
+        uses: actions/checkout@v4
+        with:
+          repository: Faster3ck/Converseen
+          path: Converseen
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '5.15.2'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win32_msvc2019'
+          install-deps: 'true'
+          set-env: 'true'
+
+      - name: Build Converseen
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat"
+          
+          cd Converseen
+          mkdir build
+          cd build
+
+          ls ${{ github.workspace }}\ImageMagick
+      
+          cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE:STRING=Release -DImageMagick_EXECUTABLE_DIR="${{ github.workspace }}\ImageMagick" ..
+          nmake
