@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-linux:
-    name: Converseen Linux Build
+    name: Converseen Linux Build (AppImage)
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Converseen
@@ -48,7 +48,7 @@ jobs:
 
   build-linux-im6:
     name: Converseen Linux Build (ImageMagick 6)
-    runs-on: ubuntu-20.04
+    runs-on: Ubuntu 22.04
     steps:
       - name: Checkout Converseen
         uses: actions/checkout@v4
@@ -238,15 +238,15 @@ jobs:
         echo "Version: $VERSION"
         echo "Build Number: $BUILD"
 
-    - name: Checkout ImageMagick
-      uses: actions/checkout@v4
-      with:
-        path: ImageMagick
-        repository: ImageMagick/ImageMagick
+    - name: Download ImageMagick
+      run: |
+        wget https://imagemagick.org/archive/ImageMagick.tar.gz
+        tar -xzvf ImageMagick.tar.gz
         
     - name: Build ImageMagick
       run: |      
-        cd ImageMagick
+        ls
+        cd ImageMagick-*
         ./configure --prefix=${{ github.workspace }}/im_build \
                               --with-quantum-depth=16 \
                               --disable-dependency-tracking \
