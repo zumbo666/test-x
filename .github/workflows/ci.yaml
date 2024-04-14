@@ -25,7 +25,7 @@ jobs:
           sudo apt-get upgrade
           
           sudo apt install -y binutils coreutils desktop-file-utils fakeroot fuse libgdk-pixbuf2.0-dev patchelf python3-pip python3-setuptools squashfs-tools strace util-linux zsync gnupg2
-          sudo apt install -y git cmake zlib1g-dev qtdeclarative5-dev qml-module-qtquick2 qml-module-qtquick-window2 qml-module-qtquick-layouts qml-module-qtquick-layouts qml-module-qtquick-controls2 qttools5-dev-tools
+          sudo apt install -y git cmake zlib1g-dev qtdeclarative5-dev qml-module-qtquick2 qml-module-qtquick-window2 qml-module-qtquick-layouts qml-module-qtquick-layouts qml-module-qtquick-controls2 qttools5-dev-tools qtmultimedia5-dev
           sudo apt install -y libtool pkg-config build-essential libssl-dev libffi-dev zlib1g-dev libpng-dev libjpeg-dev liblcms2-dev libtiff-dev libopenjp2-7-dev libwebp-dev libde265-dev libheif-dev libgif-dev libfreetype6-dev libfontconfig1-dev libxext-dev libx11-dev libdjvulibre-dev libgs-dev libwmf-dev libpango1.0-dev librsvg2-bin librsvg2-dev libxml2-dev fftw-dev liblqr-1-0-dev libraw-dev libopenexr-dev libdeflate-dev libraqm-dev libjxl-dev libimath-dev libffi7 zlib1g libpng16-16 libjpeg8 liblcms2-2 libtiff5 libopenjp2-7 libwebp6 libde265-0 libheif1 libgif7 libfreetype6 libfontconfig1 libxext6 libdjvulibre21 libgs9 libwmf0.2-7 libpango1.0-0 librsvg2-2 libxml2 fftw2 liblqr-1-0 libraw19 libimath-3-1-29 libopenexr24 libdeflate0 libraqm0 libpsm-infinipath1 libgl1-mesa-dri 
       
       - name: Build ImageMagick
@@ -64,7 +64,7 @@ jobs:
           sudo apt-get upgrade
           
           sudo apt install -y binutils coreutils desktop-file-utils fakeroot fuse libgdk-pixbuf2.0-dev patchelf python3-pip python3-setuptools squashfs-tools strace util-linux zsync gnupg2
-          sudo apt install -y git cmake zlib1g-dev qtdeclarative5-dev qml-module-qtquick2 qml-module-qtquick-window2 qml-module-qtquick-layouts qml-module-qtquick-layouts qml-module-qtquick-controls2 qtbase5-dev qttools5-dev-tools
+          sudo apt install -y git cmake zlib1g-dev qtdeclarative5-dev qml-module-qtquick2 qml-module-qtquick-window2 qml-module-qtquick-layouts qml-module-qtquick-layouts qml-module-qtquick-controls2 qtbase5-dev qttools5-dev-tools qtmultimedia5-dev
           sudo apt install -y libtool pkg-config build-essential libssl-dev libffi-dev zlib1g-dev libpng-dev libjpeg-dev liblcms2-dev libtiff-dev libopenjp2-7-dev libwebp-dev libde265-dev libheif-dev libgif-dev libfreetype6-dev libfontconfig1-dev libxext-dev libx11-dev libdjvulibre-dev libgs-dev libwmf-dev libpango1.0-dev librsvg2-bin librsvg2-dev libxml2-dev fftw-dev liblqr-1-0-dev libraw-dev libopenexr-dev libdeflate-dev libraqm-dev libjxl-dev libimath-dev libffi7 zlib1g libpng16-16 libjpeg8 liblcms2-2 libtiff5 libopenjp2-7 libwebp6 libde265-0 libheif1 libgif7 libfreetype6 libfontconfig1 libxext6 libdjvulibre21 libgs9 libwmf0.2-7 libpango1.0-0 librsvg2-2 libxml2 fftw2 liblqr-1-0 libraw19 libimath-3-1-29 libopenexr24 libdeflate0 libraqm0 libpsm-infinipath1 libgl1-mesa-dri 
           sudo apt install -y libmagick++-dev libmagickcore-dev libmagickwand-dev imagemagick
 
@@ -100,6 +100,61 @@ jobs:
         shell: cmd
         run: |
           ImageMagick-Installer.exe /MERGETASKS=install_devel /VERYSILENT /DIR=ImageMagick
+
+      - name: Recreate lib Files
+        shell: powershell
+        run: |
+          # .lib files with linker symbols have been removed from the latest versions of IM for Windows 
+          # so we need to recreate them using dumpbin and lib commands
+          
+          & 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\Launch-VsDevShell.ps1'
+        
+          cd "${{ github.workspace }}\ImageMagick"
+          mkdir lib
+        
+          $imPath = "${{ github.workspace }}\ImageMagick"
+          $destDir = "lib"
+          $ImageMagickTargets = @("CORE_RL_Magick++_", "CORE_RL_MagickCore_", "CORE_RL_MagickWand_")
+          $arch = "x86"
+          
+          foreach ($imTarget in $ImageMagickTargets) {
+              Write-Host "*--- Processing $imTarget.dll`n---"
+          	
+          	# dumpbin ImageMagick DLL
+          	dumpbin /exports "$imPath\$imTarget.dll" > $destDir\$imTarget.txt
+          	
+          	# Print useful data from dump
+          	Get-Content -Path "$destDir\$imTarget.txt" | Select-Object -Skip 4 -First 12
+          	
+          	# Create def file
+          	$filePath = "$destDir\$imTarget.txt"
+          	$outputFilePath = "$destDir\$imTarget.def"
+          
+          	$lines = Get-Content -Path $filePath
+          
+          	$filteredLines = @()
+          	$filteredLines += "EXPORTS"
+          
+          	foreach ($line in $lines) {
+          		if ($line -match "^\s+\d+\s+[0-9A-Fa-f]+\s[0-9A-Fa-f]+\s.*$") {
+          			$strLine = $matches[0] -split '\s+'
+          
+          			$filteredLines += $strLine[4]
+          		}
+          	}
+          	
+          	$filteredLines | Out-File -FilePath $outputFilePath
+          	
+          	# Get number of lines to match number of functions
+          	$nLines = (Get-Content -Path $outputFilePath | Measure-Object -Line).Lines - 1
+          	Write-Host "$filePath functions found: $nLines"
+          	
+          	# Finally, create the missing .lib files for the linker!
+          	Write-Host "*** Creating $imTarget.lib"
+          	lib /MACHINE:$arch /def:lib\$imTarget.def /OUT:lib\$imTarget.lib
+          	
+          	Write-Host "---"
+          }
     
       - name: Checkout Converseen
         uses: actions/checkout@v4
