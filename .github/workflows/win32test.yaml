@@ -33,6 +33,8 @@ jobs:
       - name: Recreate lib files
         shell: powershell
         run: |
+          & 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\Launch-VsDevShell.ps1'
+        
           cd "${{ github.workspace }}\ImageMagick"
           mkdir lib
         
