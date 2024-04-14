@@ -1,4 +1,4 @@
-name: Converseen CI
+name: Win32 Test
 
 on:
   push:
