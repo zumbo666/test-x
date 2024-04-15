@@ -58,8 +58,6 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sudo add-apt-repository -y ppa:savoury1/graphics
-          
           sudo apt-get update
           sudo apt-get upgrade
           
