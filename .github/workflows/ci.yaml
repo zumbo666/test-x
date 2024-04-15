@@ -63,9 +63,11 @@ jobs:
           sudo apt-get update
           sudo apt-get upgrade
           
-          sudo apt install -y git cmake qtbase5-dev qttools5-dev-tools qtmultimedia5-dev
+          sudo apt install -y git cmake qtbase6-dev qttools6-dev-tools qtmultimedia6-dev
           sudo apt install -y libtool pkg-config build-essential libssl-dev
           sudo apt install -y libmagick++-dev libmagickcore-dev libmagickwand-dev imagemagick
+
+          wget 
 
       - name: Build Converseen
         run: |
