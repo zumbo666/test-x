@@ -63,11 +63,9 @@ jobs:
           sudo apt-get update
           sudo apt-get upgrade
           
-          sudo apt install -y git cmake qtbase6-dev qttools6-dev-tools qtmultimedia6-dev
+          sudo apt install -y git cmake qt6-base-dev qt6-base-dev-tools qt6-l10n-tools qt6-multimedia-dev
           sudo apt install -y libtool pkg-config build-essential libssl-dev
           sudo apt install -y libmagick++-dev libmagickcore-dev libmagickwand-dev imagemagick
-
-          wget 
 
       - name: Build Converseen
         run: |
@@ -76,7 +74,7 @@ jobs:
           mkdir build
           cd build
 
-          cmake ..
+          cmake .. -DUSE_QT6=yes
           make
 
   build-windows:
