@@ -1,1 +1,77 @@
+# Test build process on various OS and Configutations
+name: Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    name: Converseen Windows Build
+    runs-on: windows-2022
+
+    steps:
+      - name: Download ImageMagick for Windows
+        shell: powershell
+        run: |
+          # Get latest version number from GitHub
+          $gitTags = git ls-remote --sort="version:refname" --tags https://github.com/ImageMagick/ImageMagick.git
+          $lastTagLine = $gitTags[-1]
+          $lastTagVersion = $lastTagLine -replace '.*refs/tags/(.*)', '$1'
+          $latestVersionNumber = $lastTagVersion
+          
+          Write-Host "Latest ImageMagick Version Found: $latestVersionNumber"
+          
+          Invoke-WebRequest -Uri "https://imagemagick.org/archive/binaries/ImageMagick-$latestVersionNumber-Q16-HDRI-x86-dll.exe" -OutFile ImageMagick-Installer.exe
+
+      - name: Install ImageMagick for Windows
+        shell: cmd
+        run: |
+          ImageMagick-Installer.exe /MERGETASKS=install_devel /VERYSILENT /DIR=ImageMagick
+    
+      - name: Checkout Converseen
+        uses: actions/checkout@v4
+        with:
+          repository: Faster3ck/Converseen
+          path: Converseen
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '5.15.2'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win32_msvc2019'
+          install-deps: 'true'
+          set-env: 'true'
+
+      - name: Build Converseen
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat"
+          
+          cd Converseen
+          mkdir build
+          cd build
+      
+          cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE:STRING=Release -DImageMagick_EXECUTABLE_DIR="${{ github.workspace }}\ImageMagick" ..
+          nmake
+          cpack -B package
+
+      - name: Prepare Artifacts
+        shell: cmd
+        run: |
+          ls
+
+          ls Converseen/build/package/
+        
+          mkdir artifacts
+          cp Converseen/build/package/*.msi artifacts/
+          cp Converseen/build/package/*.zip artifacts/
+
+          ls artifacts
+          
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Windows
+          path: 'artifacts'
 
