@@ -63,7 +63,7 @@ jobs:
           mkdir build
           cd build
       
-          cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE:STRING=Release -DImageMagick_EXECUTABLE_DIR="${{ github.workspace }}\ImageMagick" ..
+          cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE:STRING=Release -DImageMagick_EXECUTABLE_DIR="${{ github.workspace }}\ImageMagick" ${{ matrix.qt_version == '6.9.0' && '-DUSE_QT6=yes' || '' }} ..
           nmake
           cpack -B package
       
