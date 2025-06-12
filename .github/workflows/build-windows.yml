@@ -46,6 +46,7 @@ jobs:
         with:
           path: Converseen
           repository: Faster3ck/Converseen
+          ref: dev
       
       - name: Install Qt ${{ matrix.qt_version }} (${{ matrix.bits }})
         uses: jurplel/install-qt-action@v4
