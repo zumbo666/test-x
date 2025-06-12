@@ -1,5 +1,5 @@
 # Test build process on various OS and Configurations
-name: Build
+name: Windows Test Build
 on:
   workflow_dispatch:
 jobs:
