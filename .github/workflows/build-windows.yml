@@ -62,31 +62,14 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=${{ matrix.vs_arch }}
-
-          echo "Echo 1:"
-          pwd
-          ls
           
           cd Converseen
-
-          echo "Echo 2:"
-          pwd
-          ls
-          
           mkdir build
           cd build
-
-          echo "Echo 3:"
-          pwd
-          ls
       
           cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE:STRING=Release -DImageMagick_EXECUTABLE_DIR="${{ github.workspace }}\ImageMagick" ${{ matrix.cmake_extra_flags }} ..
           nmake
           cpack -B package
-
-          echo "Echo 4:"
-          pwd
-          ls
       
       - name: Prepare Artifacts (Qt ${{ matrix.qt_version }} ${{ matrix.bits }})
         shell: cmd
