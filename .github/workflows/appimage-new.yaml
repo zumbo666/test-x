@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Setup Container
         run: |
-          pacman -Sy base-devel sudo
+          pacman -Sy --noconfirm base-devel sudo
           useradd -m builder
           echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
           su - builder
