@@ -21,6 +21,8 @@ jobs:
             arch: aarch64
     container: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
+      - uses: actions/checkout@v4
+    
       - name: Setup Container
         run: |
           pacman -Sy --noconfirm base-devel sudo
@@ -28,8 +30,14 @@ jobs:
           echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
           su - builder
 
+      - name: Get dependencies
+        run: |
+          su - builder
+          chmod +x ./get-dependencies.sh && ./get-dependencies.sh
+
       - name: Install Custom ImageMagick
         run: |
+          su - builder
           pwd
           ls
           whoami
@@ -40,9 +48,6 @@ jobs:
           
           make -j$(nproc)
           make install
-
-      - name: Get dependencies
-        run: chmod +x ./get-dependencies.sh && ./get-dependencies.sh
 
       - name: Make AppImage
         run: chmod +x ./*-appimage.sh && ./*-appimage.sh
