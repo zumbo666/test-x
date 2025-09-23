@@ -40,7 +40,7 @@ jobs:
           whoami
 
           echo "sudo: "
-          sudo -u builder pwd
+          sudo -u builder whoami
 
       - name: Get dependencies
         run: |
