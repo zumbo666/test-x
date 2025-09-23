@@ -28,7 +28,7 @@ jobs:
       - name: Create builder user
         run: |
           pacman -Sy --noconfirm shadow sudo base-devel
-          useradd -m builder
+          useradd -m -u 1000 -s /bin/bash builder
           echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
           chown -Rv builder:builder $GITHUB_WORKSPACE
 
