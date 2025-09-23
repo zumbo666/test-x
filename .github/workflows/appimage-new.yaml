@@ -41,6 +41,9 @@ jobs:
       - name: Get dependencies
         run: |
           su - builder
+          pwd
+          ls
+          whoami
           chmod +x ./get-dependencies.sh && ./get-dependencies.sh
 
       - name: Install Custom ImageMagick
