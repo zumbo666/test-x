@@ -23,8 +23,6 @@ jobs:
       image: ghcr.io/pkgforge-dev/archlinux:latest
       options: --user 1000:1000
     steps:
-      - uses: actions/checkout@v4
-
       - name: Test User
         run: |
           pwd
