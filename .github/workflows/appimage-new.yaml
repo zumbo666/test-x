@@ -50,7 +50,7 @@ jobs:
 
       - name: Build Converseen
         run: |
-          sudo -u builder 
+          su - builder
           cd appimage/build
           makepkg -si --noconfirm
 
