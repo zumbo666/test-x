@@ -23,6 +23,12 @@ jobs:
       image: ghcr.io/pkgforge-dev/archlinux:latest
       options: --user 1000:1000
     steps:
+      - name: Create builder user
+        run: |
+          echo "builder:x:1000:1000:Builder,,,:/home/builder:/bin/bash" >> /etc/passwd
+          mkdir -p /home/builder
+          chown -R 1000:1000 /home/builder $GITHUB_WORKSPACE
+
       - name: Test User
         run: |
           pwd
