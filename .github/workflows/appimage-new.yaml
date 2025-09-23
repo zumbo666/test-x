@@ -30,4 +30,7 @@ jobs:
 
       - name: Run as builder
         run: |
-          su - builder -c "whoami && pwd && makepkg -si --noconfirm"
+          su - builder
+          pwd
+          ls
+          whoami
