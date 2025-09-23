@@ -27,8 +27,9 @@ jobs:
         
       - name: Create builder user
         run: |
-          pacman -Sy --noconfirm shadow
-          useradd -m -u 1000 -s /bin/bash builder
+          pacman -Sy --noconfirm shadow sudo base-devel
+          useradd -m builder
+          echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
           chown -Rv builder:builder $GITHUB_WORKSPACE
 
       - name: Run as builder
@@ -49,7 +50,9 @@ jobs:
 
       - name: Build Converseen
         run: |
-          sudo -u builder bash -c "cd $GITHUB_WORKSPACE/appimage/build && makepkg -si --noconfirm"
+          sudo -u builder 
+          cd appimage/build
+          makepkg -si --noconfirm
 
       - name: Make AppImage
         run: |
