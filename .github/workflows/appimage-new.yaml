@@ -21,16 +21,13 @@ jobs:
             arch: aarch64
     container:
       image: ghcr.io/pkgforge-dev/archlinux:latest
-      options: --user 1000:1000
     steps:
       - name: Create builder user
         run: |
-          echo "builder:x:1000:1000:Builder,,,:/home/builder:/bin/bash" >> /etc/passwd
-          mkdir -p /home/builder
-          chown -R 1000:1000 /home/builder $GITHUB_WORKSPACE
+          pacman -Sy --noconfirm shadow
+          useradd -m -u 1000 -s /bin/bash builder
+          chown -R builder:builder $GITHUB_WORKSPACE
 
-      - name: Test User
+      - name: Run as builder
         run: |
-          pwd
-          ls
-          whoami
+          su - builder -c "whoami && pwd && makepkg -si --noconfirm"
