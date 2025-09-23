@@ -22,11 +22,14 @@ jobs:
     container:
       image: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
       - name: Create builder user
         run: |
           pacman -Sy --noconfirm shadow
           useradd -m -u 1000 -s /bin/bash builder
-          chown -R builder:builder $GITHUB_WORKSPACE
+          chown -Rv builder:builder $GITHUB_WORKSPACE
 
       - name: Run as builder
         run: |
@@ -34,9 +37,6 @@ jobs:
           pwd
           ls
           whoami
-
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: Get dependencies
         run: |
