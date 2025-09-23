@@ -28,14 +28,19 @@ jobs:
       - name: Create builder user
         run: |
           pacman -Sy --noconfirm shadow sudo base-devel
-          useradd -m -u 1000 -s /bin/bash builder
+          # useradd -m -u 1000 -s /bin/bash builder
+          useradd -m builder
           echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
           chown -Rv builder:builder $GITHUB_WORKSPACE
 
       - name: Run as builder
         run: |
+          echo "su: "
           su - builder
           whoami
+
+          echo "sudo: "
+          sudo -u builder pwd
 
       - name: Get dependencies
         run: |
