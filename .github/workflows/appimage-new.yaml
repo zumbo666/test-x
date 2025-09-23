@@ -47,24 +47,9 @@ jobs:
           cd appimage
           chmod +x ./get-dependencies.sh && ./get-dependencies.sh
 
-      - name: Install Custom ImageMagick
-        run: |
-          su - builder
-          
-          wget https://mirror.dogado.de/imagemagick/ImageMagick.tar.bz2
-          tar -xvf ImageMagick.tar.bz2
-          cd ImageMagick-*/
-          ./configure --enable-shared --disable-installed --enable-hdri --without-perl --disable-dependency-tracking --with-gslib=yes --with-openjp2 --with-wmf --without-gvc --with-djvu --without-dps --without-fpx --with-heic=yes --with-rsvg --with-uhdr --with-fftw --with-lqr --without-autotrace --without-dps --without-fpx --without-gcc-arch --with-dejavu-font-dir=/usr/share/fonts/TTF --with-gs-font-dir=/usr/share/fonts/gsfonts --prefix=/usr --sysconfdir=/etc
-          
-          make -j$(nproc)
-          sudo make install
-
       - name: Build Converseen
         run: |
-          su - builder
-          
-          cd appimage/build
-          makepkg -si --noconfirm
+          sudo -u builder bash -c "cd $GITHUB_WORKSPACE/appimage/build && makepkg -si --noconfirm"
 
       - name: Make AppImage
         run: |
