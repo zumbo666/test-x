@@ -44,7 +44,7 @@ jobs:
 
       - name: Get dependencies
         run: |
-          su - builder
+          #su - builder
           pwd
           ls
           whoami
@@ -53,7 +53,7 @@ jobs:
 
       - name: Install Custom ImageMagick
         run: |
-          su - builder
+          #su - builder
           
           wget https://mirror.dogado.de/imagemagick/ImageMagick.tar.bz2
           tar -xvf ImageMagick.tar.bz2
@@ -70,7 +70,7 @@ jobs:
 
       - name: Make AppImage
         run: |
-          su - builder
+          #su - builder
           cd appimage
           chmod +x ./*-appimage.sh && ./*-appimage.sh
 
