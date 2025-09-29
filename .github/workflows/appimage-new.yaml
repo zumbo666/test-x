@@ -49,7 +49,7 @@ jobs:
 
       - name: Install Custom ImageMagick
         run: |
-          cd cd appimage
+          cd appimage
           chmod +x ./build-imagemagick.sh && ./build-imagemagick.sh
 
       - name: Build Converseen
