@@ -10,13 +10,11 @@ pacman -Syu --noconfirm \
 	curl             \
 	git              \
 	djvulibre        \
-	ghostscript      \
 	jbigkit          \
 	libheif          \
 	libjpeg-turbo    \
 	libjxl           \
 	libraw           \
-	librsvg          \
 	libtiff          \
 	libultrahdr      \
 	libwebp          \
@@ -35,10 +33,13 @@ pacman -Syu --noconfirm \
 	qt6-wayland      \
 	wget             \
 	xorg-server-xvfb \
+	rav1e            \
+	svt-av1          \
+	ghostscript      \
 	zsync
 
 echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
 wget --retry-connrefused --tries=30 "$EXTRA_PACKAGES" -O ./get-debloated-pkgs.sh
 chmod +x ./get-debloated-pkgs.sh
-./get-debloated-pkgs.sh --add-opengl --prefer-nano qt6-base-mini gtk3-mini libxml2-mini opus-mini
+./get-debloated-pkgs.sh --add-opengl --prefer-nano qt6-base-mini gtk3-mini libxml2-mini opus-mini ffmpeg-mini

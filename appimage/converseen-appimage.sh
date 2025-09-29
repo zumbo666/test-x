@@ -13,14 +13,22 @@ export DESKTOP=/usr/share/applications/net.fasterland.converseen.desktop
 #export UPINFO="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|*$ARCH.AppImage.zsync"
 export OUTNAME=Converseen-"$VERSION"-anylinux-"$ARCH".AppImage
 
+#export MAGICK_HOME=$HOME/ImageMagick7-devel
+#export PATH="$MAGICK_HOME/bin:$PATH"
+#export LD_LIBRARY_PATH="$MAGICK_HOME/lib:$LD_LIBRARY_PATH"
+
 # Deploy dependencies
 wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
 chmod +x ./quick-sharun
 ./quick-sharun \
-	/usr/bin/converseen               \
-	/usr/lib/libheif/libheif-dav1d.so \
-	/usr/lib/libheif/libheif-rav1e.so \
-	/usr/lib/libheif/libheif-svtenc.so
+	/usr/bin/converseen                \
+	/usr/lib/libheif/libheif-dav1d.so  \
+	/usr/lib/libheif/libheif-rav1e.so  \
+	/usr/lib/libheif/libheif-svtenc.so \
+	/usr/lib/libSvtAv1Enc.so           \
+	/usr/lib/libavcodec.so
+
+#echo 'LIBHEIF_PLUGIN_PATH=${SHARUN_DIR}/lib/libheif' >> ./AppDir/.env
 
 cat >> ./AppDir/.env << 'EOF'
 # Set heif plugins dir
@@ -46,3 +54,4 @@ chmod +x ./uruntime2appimage
 
 mkdir -p ./dist
 mv -v ./*.AppImage* ./dist
+#mv -v ~/version     ./dist
