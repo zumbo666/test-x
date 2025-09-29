@@ -36,6 +36,7 @@ pacman -Syu --noconfirm \
 	rav1e            \
 	svt-av1          \
 	ghostscript      \
+	ffmpeg           \
 	zsync
 
 echo "Installing debloated packages..."
