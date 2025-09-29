@@ -6,6 +6,9 @@ concurrency:
 on:
   workflow_dispatch: {}
 
+env:   # variabili globali
+  APPIMAGE_DIR: appimage/
+  
 jobs:
   build:
     name: "${{ matrix.name }} (${{ matrix.arch }})"
@@ -44,27 +47,26 @@ jobs:
 
       - name: Get dependencies
         run: |
-          cd appimage
+          cd $APPIMAGE_DIR
           chmod +x ./get-dependencies.sh && ./get-dependencies.sh
 
       - name: Install Custom ImageMagick
         run: |
-          cd appimage
+          cd $APPIMAGE_DIR
           chmod +x ./build-imagemagick.sh && ./build-imagemagick.sh
 
       - name: Build Converseen
         run: |
-          cd appimage/build
+          cd $APPIMAGE_DIR/build
           sudo -u builder makepkg -si --noconfirm
 
       - name: Make AppImage
         run: |
-          #su - builder
-          cd appimage
+          cd "$APPIMAGE_DIR"
           chmod +x ./*-appimage.sh && ./*-appimage.sh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4.6.2
         with:
           name: AppImage-${{ matrix.arch }}
-          path: appimage/dist
+          path: ${{ env.APPIMAGE_DIR }}/dist
