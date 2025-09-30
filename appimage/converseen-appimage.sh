@@ -10,12 +10,8 @@ SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/h
 export ADD_HOOKS="self-updater.bg.hook"
 export ICON=/usr/share/icons/hicolor/256x256/apps/converseen.png
 export DESKTOP=/usr/share/applications/net.fasterland.converseen.desktop
-#export UPINFO="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|*$ARCH.AppImage.zsync"
+export UPINFO="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|*$ARCH.AppImage.zsync"
 export OUTNAME=Converseen-"$VERSION"-anylinux-"$ARCH".AppImage
-
-#export MAGICK_HOME=$HOME/ImageMagick7-devel
-#export PATH="$MAGICK_HOME/bin:$PATH"
-#export LD_LIBRARY_PATH="$MAGICK_HOME/lib:$LD_LIBRARY_PATH"
 
 # Deploy dependencies
 wget --retry-connrefused --tries=30 "$SHARUN" -O ./quick-sharun
@@ -27,8 +23,6 @@ chmod +x ./quick-sharun
 	/usr/lib/libheif/libheif-svtenc.so \
 	/usr/lib/libSvtAv1Enc.so           \
 	/usr/lib/libavcodec.so
-
-#echo 'LIBHEIF_PLUGIN_PATH=${SHARUN_DIR}/lib/libheif' >> ./AppDir/.env
 
 cat >> ./AppDir/.env << 'EOF'
 # Set heif plugins dir
@@ -43,6 +37,15 @@ EOF
 # Copy Ghostscript resources
 cp -rv /usr/share/ghostscript ./AppDir/share
 
+# Copy Converseen resources
+mkdir -p ./AppDir/share/applications
+mkdir -p ./AppDir/share/metainfo
+mkdir -p ./AppDir/share/kio/servicemenus
+
+cp -v /usr/share/applications/net.fasterland.converseen.desktop ./AppDir/share/applications
+cp -v /usr/share/metainfo/converseen.appdata.xml ./AppDir/share/metainfo
+cp -v /usr/share/kio/servicemenus/converseen_import.desktop ./AppDir/share/kio/servicemenus
+
 # Remove useless files
 rm ./AppDir/bin/convert
 rm ./AppDir/bin/magick
@@ -54,4 +57,3 @@ chmod +x ./uruntime2appimage
 
 mkdir -p ./dist
 mv -v ./*.AppImage* ./dist
-#mv -v ~/version     ./dist
