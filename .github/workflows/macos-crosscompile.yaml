@@ -1,0 +1,27 @@
+name: Cross-compile for macOS
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build using osxcross
+        run: |
+          docker run --rm -v $PWD:/work ghcr.io/tpoechtrager/osxcross:latest bash -c "
+            set -e
+            cd /work
+            # imposta l'SDK (ad esempio MacOSX10.15)
+            export OSX_VERSION_MIN=10.15
+            export PATH=/osxcross/target/bin:\$PATH
+            export CC=o64-clang
+            export CXX=o64-clang++
+
+            uname -a
