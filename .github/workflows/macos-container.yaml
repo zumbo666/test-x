@@ -1,0 +1,32 @@
+name: MacOS Container
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch: {}
+
+env:   # variabili globali
+  APPIMAGE_DIR: appimage/
+  
+jobs:
+  build:
+    name: MacOS Testing
+    runs-on: ubuntu-latest
+    
+    container:
+      image: sickcodes/docker-osx:latest
+      env:
+        SHORTNAME: catalina
+      ports:
+        - 50922
+        - 10022
+      volumes:
+        - /tmp/.X11-unix:/tmp/.X11-unix
+      options: --device /dev/kvm
+    steps:
+      - name: Test
+        run: |
+          echo "Ciaones"
+          uname -a
+          
