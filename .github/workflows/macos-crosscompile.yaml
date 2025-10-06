@@ -1,9 +1,11 @@
 name: Cross-compile for macOS
 
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
-  push:
-    branches: [ main ]
-  pull_request:
+  workflow_dispatch: {}
 
 jobs:
   build:
@@ -24,4 +26,4 @@ jobs:
             export CC=o64-clang
             export CXX=o64-clang++
 
-            uname -a
+            uname -a"
