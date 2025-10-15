@@ -34,13 +34,18 @@ pacman -Syu --noconfirm \
 	wget             \
 	xorg-server-xvfb \
 	rav1e            \
-	svt-av1          \
 	ghostscript      \
 	ffmpeg           \
+	kvantum          \
 	zsync
+
+	# At the moment, the svt-av1 package is not available on aarch64
+	if [ "$(uname -m)" = "x86_64" ]; then
+	  pacman -S --noconfirm --needed svt-av1
+	fi
 
 echo "Installing debloated packages..."
 echo "---------------------------------------------------------------"
 wget --retry-connrefused --tries=30 "$EXTRA_PACKAGES" -O ./get-debloated-pkgs.sh
 chmod +x ./get-debloated-pkgs.sh
-./get-debloated-pkgs.sh --add-opengl --prefer-nano qt6-base-mini gtk3-mini libxml2-mini opus-mini
+./get-debloated-pkgs.sh --add-common --prefer-nano
