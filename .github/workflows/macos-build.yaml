@@ -30,7 +30,7 @@ jobs:
         # wget https://imagemagick.org/archive/ImageMagick.tar.gz
         # tar -xzvf ImageMagick.tar.gz
 
-        git clone https://github.com/ImageMagick/ImageMagick.git -b 7.1.2-10
+        git clone https://github.com/ImageMagick/ImageMagick.git -b 7.1.2-12
         
     - name: Build ImageMagick
       run: |
