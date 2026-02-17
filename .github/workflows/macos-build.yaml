@@ -52,6 +52,11 @@ jobs:
                               --with-gslib=yes \
                               --disable-opencl \
                               --enable-openmp \
+                              --enable-osx-universal-binary=no \
+                              --with-gvc=no \
+                              --with-zip=yes \
+                              --without-pango \
+                              --without-wmf \
                               --disable-silent-rules
 
         make
