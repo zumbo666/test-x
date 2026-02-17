@@ -34,6 +34,10 @@ jobs:
       run: |
         cd ImageMagick-*
 
+        export CPPFLAGS="-I/opt/homebrew/include"
+        export LDFLAGS="-L/opt/homebrew/lib -lomp"
+        export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig"
+
         # Sostituisce @PKG_CONFIG@
         find . -name "*-config.in" -type f -exec sed -i.bak \
           's|@PKG_CONFIG@|pkg-config|g' {} \;
