@@ -34,30 +34,44 @@ jobs:
       run: |
         cd ImageMagick-*
 
-        export CPPFLAGS="-Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include"
-        export LDFLAGS="-L/opt/homebrew/opt/libomp/lib -lomp -lz"
-      
-        export ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp"
-        export ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
+        # Sostituisce @PKG_CONFIG@
+        find . -name "*-config.in" -type f -exec sed -i.bak \
+          's|@PKG_CONFIG@|pkg-config|g' {} \;
         
+        # Rimuove versione dal nome pacchetto
+        sed -i.bak \
+          's/${PACKAGE_NAME}-${PACKAGE_BASE_VERSION}/${PACKAGE_NAME}/g' \
+          configure
+
         ./configure --prefix=${{ github.workspace }}/im_build \
-                              --with-quantum-depth=16 \
-                              --disable-dependency-tracking \
-                              --without-perl \
-                              --without-x \
-                              --disable-static \
-                              --disable-installed \
-                              --enable-shared \
-                              --with-flif=yes \
-                              --with-gslib=yes \
-                              --disable-opencl \
-                              --enable-openmp \
-                              --enable-osx-universal-binary=no \
-                              --with-gvc=no \
-                              --with-zip=yes \
-                              --without-pango \
-                              --without-wmf \
-                              --disable-silent-rules
+                    --enable-osx-universal-binary=no \
+                    --disable-silent-rules \
+                    --disable-opencl \
+                    --enable-shared \
+                    --enable-static \
+                    --with-freetype=yes \
+                    --with-rsvg=yes \
+                    --with-gvc=no \
+                    --with-modules \
+                    --with-openjp2 \
+                    --with-openexr \
+                    --with-webp=yes \
+                    --with-heic=yes \
+                    --with-raw=yes \
+                    --with-uhdr=yes \
+                    --with-zip=yes \
+                    --with-gslib \
+                    --with-gs-font-dir=/usr/local/share/ghostscript/fonts \
+                    --with-lqr \
+                    --without-djvu \
+                    --without-fftw \
+                    --without-pango \
+                    --without-wmf \
+                    --enable-openmp \
+                    --without-x \
+                    ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp" \
+                    ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp" \
+                    LDFLAGS="-lomp -lz"
 
         make
         make install
