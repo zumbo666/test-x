@@ -18,7 +18,7 @@ jobs:
         set -e
         
         export HOMEBREW_NO_AUTO_UPDATE=1
-        brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool libzip openexr openjpeg webp libraw ghostscript libomp glib libultrahdr imath
+        brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool libzip openexr openjpeg webp libraw ghostscript libomp glib libultrahdr imath llvm
 
     - name: Checkout Converseen
       uses: actions/checkout@v4
@@ -38,11 +38,11 @@ jobs:
       run: |
         cd ImageMagick
 
-        # export CPPFLAGS="-Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include"
-        # export LDFLAGS="-L/opt/homebrew/lib -lomp -lz"
+        export CPPFLAGS="-Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include"
+        export LDFLAGS="-L/opt/homebrew/opt/libomp/lib -lomp -lz"
         
-        # export ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp"
-        # export ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
+        export ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp"
+        export ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
 
         ./configure --prefix=${{ github.workspace }}/im_build \
                     --disable-silent-rules \
