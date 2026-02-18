@@ -44,12 +44,8 @@ jobs:
         # export CPPFLAGS="-Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include"
         # export LDFLAGS="-L/opt/homebrew/opt/libomp/lib -lomp -lz"
         
-        # export ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp"
-        # export ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
-
-        export PATH="/usr/local/opt/llvm/bin:$PATH"
-        export CC="/usr/local/opt/llvm/bin/clang"
-        export CXX="/usr/local/opt/llvm/bin/clang++"
+        export ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp"
+        export ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
 
         ./configure --prefix=${{ github.workspace }}/im_build \
                     --disable-silent-rules \
