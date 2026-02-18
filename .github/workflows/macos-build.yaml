@@ -38,8 +38,8 @@ jobs:
       run: |
         cd ImageMagick-*
 
-        CPPFLAGS += -Xclang -fopenmp
-        LDFLAGS += -lomp
+        export CPPFLAGS += -Xclang -fopenmp
+        export LDFLAGS += -lomp
 
         # export CPPFLAGS="-Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include"
         # export LDFLAGS="-L/opt/homebrew/opt/libomp/lib -lomp -lz"
