@@ -27,27 +27,22 @@ jobs:
 
     - name: Download ImageMagick
       run: |
-        wget https://imagemagick.org/archive/ImageMagick.tar.gz
-        tar -xzvf ImageMagick.tar.gz
+        # wget https://imagemagick.org/archive/ImageMagick.tar.gz
+        # tar -xzvf ImageMagick.tar.gz
+        git clone https://github.com/ImageMagick/ImageMagick.git -b 7.1.2-12
+        cd ImageMagick
+        wget "https://gitlab.archlinux.org/archlinux/packaging/packages/imagemagick/-/raw/ca9b35f767e1c4a166847fbfe17c2d715aa80582/libraw-0.22.patch"
+        patch -p1 < libraw-0.22.patch
         
     - name: Build ImageMagick
       run: |
-        cd ImageMagick-*
+        cd ImageMagick
 
-        export CPPFLAGS="-Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include"
-        export LDFLAGS="-L/opt/homebrew/lib -lomp -lz"
+        # export CPPFLAGS="-Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include"
+        # export LDFLAGS="-L/opt/homebrew/lib -lomp -lz"
         
-        export ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp"
-        export ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
-
-        # Sostituisce @PKG_CONFIG@
-        find . -name "*-config.in" -type f -exec sed -i.bak \
-          's|@PKG_CONFIG@|pkg-config|g' {} \;
-        
-        # Rimuove versione dal nome pacchetto
-        sed -i.bak \
-          's/${PACKAGE_NAME}-${PACKAGE_BASE_VERSION}/${PACKAGE_NAME}/g' \
-          configure
+        # export ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp"
+        # export ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
 
         ./configure --prefix=${{ github.workspace }}/im_build \
                     --disable-silent-rules \
@@ -74,7 +69,7 @@ jobs:
                     --enable-openmp \
                     --without-x
                 
-        make && cat config.log
+        make
         make install
 
     - name: Install Qt
