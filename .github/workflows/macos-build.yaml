@@ -74,7 +74,7 @@ jobs:
                     --enable-openmp \
                     --without-x
                 
-        make
+        make && cat config.log
         make install
 
     - name: Install Qt
