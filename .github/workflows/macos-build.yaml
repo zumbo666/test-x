@@ -50,7 +50,6 @@ jobs:
           configure
 
         ./configure --prefix=${{ github.workspace }}/im_build \
-                    --enable-osx-universal-binary=no \
                     --disable-silent-rules \
                     --disable-opencl \
                     --enable-shared \
@@ -58,7 +57,6 @@ jobs:
                     --with-freetype=yes \
                     --with-rsvg=yes \
                     --with-gvc=no \
-                    --with-modules \
                     --with-openjp2 \
                     --with-openexr \
                     --with-webp=yes \
