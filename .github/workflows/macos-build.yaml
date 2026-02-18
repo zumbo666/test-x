@@ -18,7 +18,7 @@ jobs:
         set -e
         
         export HOMEBREW_NO_AUTO_UPDATE=1
-        brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool libzip openexr openjpeg webp libraw ghostscript libomp
+        brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool libzip openexr openjpeg webp libraw ghostscript libomp glib libultrahdr imath
 
     - name: Checkout Converseen
       uses: actions/checkout@v4
