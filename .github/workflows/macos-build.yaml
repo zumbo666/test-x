@@ -69,7 +69,7 @@ jobs:
                     --without-fftw \
                     --without-pango \
                     --without-wmf \
-                    --without-openmp \
+                    --enable-openmp=no \
                     --without-x
                 
         make
