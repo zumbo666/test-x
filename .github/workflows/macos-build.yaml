@@ -18,12 +18,13 @@ jobs:
         set -e
         
         export HOMEBREW_NO_AUTO_UPDATE=1
-        brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool libzip openexr openjpeg webp libraw ghostscript glib
+        brew brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool openexr openexr openjpeg webp libraw ghostscript
 
     - name: Checkout Converseen
       uses: actions/checkout@v4
       with:
         path: Converseen
+        repository: Faster3ck/Converseen
 
     - name: Download ImageMagick
       run: |
@@ -57,6 +58,9 @@ jobs:
         ./configure --prefix=${{ github.workspace }}/im_build \
                     --disable-silent-rules \
                     --disable-dependency-tracking \
+                    --without-perl \
+                    --disable-installed \
+                    --with-quantum-depth=16 \
                     --disable-opencl \
                     --enable-shared \
                     --with-freetype=yes \
