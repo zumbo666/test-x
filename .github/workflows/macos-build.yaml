@@ -18,7 +18,7 @@ jobs:
         set -e
         
         export HOMEBREW_NO_AUTO_UPDATE=1
-        brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool libzip openexr openjpeg webp libraw ghostscript libomp glib
+        brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool libzip openexr openjpeg webp libraw ghostscript glib
 
     - name: Checkout Converseen
       uses: actions/checkout@v4
@@ -74,14 +74,14 @@ jobs:
                     --without-pango \
                     --without-wmf \
                     --without-x \
-                    --enable-openmp=no \
-                    CC="clang" \
-                    CXX="clang++" \
-                    CFLAGS="-I$OMP_PATH/include -Xpreprocessor -fopenmp" \
-                    CXXFLAGS="-I$OMP_PATH/include -Xpreprocessor -fopenmp" \
-                    LDFLAGS="-L$OMP_PATH/lib -lomp -Wl,-dead_strip_dylibs" \
-                    ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp" \
-                    ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
+                    --enable-openmp=no
+                    #CC="clang" \
+                    #CXX="clang++" \
+                    #CFLAGS="-I$OMP_PATH/include -Xpreprocessor -fopenmp" \
+                    #CXXFLAGS="-I$OMP_PATH/include -Xpreprocessor -fopenmp" \
+                    #LDFLAGS="-L$OMP_PATH/lib -lomp -Wl,-dead_strip_dylibs" \
+                    #ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp" \
+                    #ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
                 
         make
         make install
