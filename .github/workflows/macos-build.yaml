@@ -76,7 +76,7 @@ jobs:
                     CXX="clang++" \
                     CFLAGS="-I$OMP_PATH/include -Xpreprocessor -fopenmp" \
                     CXXFLAGS="-I$OMP_PATH/include -Xpreprocessor -fopenmp" \
-                    LDFLAGS="-L$OMP_PATH/lib -lomp" \
+                    LDFLAGS="-L$OMP_PATH/lib -lomp -Wl,-dead_strip_dylibs" \
                     ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp" \
                     ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
                 
