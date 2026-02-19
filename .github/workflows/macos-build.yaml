@@ -74,7 +74,7 @@ jobs:
                     --without-pango \
                     --without-wmf \
                     --without-x \
-                    --enable-openmp \
+                    --enable-openmp=no \
                     CC="clang" \
                     CXX="clang++" \
                     CFLAGS="-I$OMP_PATH/include -Xpreprocessor -fopenmp" \
