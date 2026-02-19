@@ -97,6 +97,7 @@ jobs:
       
     - name: Build Converseen
       run: |
+        cd Converseen
         mkdir build
         cd build
 
