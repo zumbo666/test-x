@@ -6,7 +6,7 @@ on:
 jobs:
   build-macos:
     name: Converseen macOS Build
-    runs-on: macos-14
+    runs-on: macos-15
 
     env:
       BASE_DIR: ${{ github.workspace }}/im_build 
@@ -27,25 +27,25 @@ jobs:
 
     - name: Download ImageMagick
       run: |
-        # wget https://imagemagick.org/archive/ImageMagick.tar.gz
-        # tar -xzvf ImageMagick.tar.gz
-        git clone https://github.com/ImageMagick/ImageMagick.git -b 7.1.2-9
-        cd ImageMagick
-        wget "https://gitlab.archlinux.org/archlinux/packaging/packages/imagemagick/-/raw/ca9b35f767e1c4a166847fbfe17c2d715aa80582/libraw-0.22.patch"
-        patch -p1 < libraw-0.22.patch
+        wget https://imagemagick.org/archive/ImageMagick.tar.gz
+        tar -xzvf ImageMagick.tar.gz
+        #git clone https://github.com/ImageMagick/ImageMagick.git -b 7.1.2-9
+        #cd ImageMagick
+        #wget "https://gitlab.archlinux.org/archlinux/packaging/packages/imagemagick/-/raw/ca9b35f767e1c4a166847fbfe17c2d715aa80582/libraw-0.22.patch"
+        #patch -p1 < libraw-0.22.patch
         
     - name: Build ImageMagick
       run: |
-        cd ImageMagick
+        cd ImageMagick-*
 
         # export CPPFLAGS="-Xpreprocessor -fopenmp -std=c++11 -I/opt/homebrew/opt/libomp/include $CPPFLAGS"
         # export LDFLAGS="-L/opt/homebrew/opt/libomp/lib -lomp $LDFLAGS"
 
-        export CPPFLAGS="-Xpreprocessor -fopenmp -std=c++11 -I/opt/homebrew/opt/libomp/include"
-        export LDFLAGS="-L/opt/homebrew/opt/libomp/lib -lomp -lz"
+        #export CPPFLAGS="-Xpreprocessor -fopenmp -std=c++11 -I/opt/homebrew/opt/libomp/include"
+        #export LDFLAGS="-L/opt/homebrew/opt/libomp/lib -lomp -lz"
         
-        export ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp"
-        export ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp -std=c++11"
+        #export ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp"
+        #export ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp -std=c++11"
 
         ./configure --prefix=${{ github.workspace }}/im_build \
                     --disable-silent-rules \
