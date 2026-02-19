@@ -47,8 +47,11 @@ jobs:
         #export ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp"
         #export ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
 
-        export LDFLAGS="-L/opt/homebrew/opt/libomp/lib -lomp"
-        export CPPFLAGS="-I/opt/homebrew/opt/libomp/include"
+        # Definiamo i path di Homebrew per Apple Silicon
+        export OMP_PATH=$(brew --prefix libomp)
+        
+        export CFLAGS="-I$OMP_PATH/include -Xpreprocessor -fopenmp"
+        export LDFLAGS="-L$OMP_PATH/lib -lomp"
 
         ./configure --prefix=${{ github.workspace }}/im_build \
                     --disable-silent-rules \
@@ -71,8 +74,8 @@ jobs:
                     --without-wmf \
                     --without-x \
                     --enable-openmp \
-                    ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp" \
-                    ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
+                    ac_cv_prog_c_openmp=" " \
+                    ac_cv_prog_cxx_openmp=" "
                 
         make
         make install
