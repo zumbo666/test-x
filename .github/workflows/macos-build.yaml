@@ -38,17 +38,21 @@ jobs:
       run: |
         cd ImageMagick-*
 
-        export CPPFLAGS="-Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include $CPPFLAGS"
-        export LDFLAGS="-L/opt/homebrew/opt/libomp/lib -lomp $LDFLAGS"
+        #export CPPFLAGS="-Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include $CPPFLAGS"
+        #export LDFLAGS="-L/opt/homebrew/opt/libomp/lib -lomp $LDFLAGS"
 
         #export CPPFLAGS="-Xpreprocessor -fopenmp -std=c++11 -I/opt/homebrew/opt/libomp/include"
         #export LDFLAGS="-L/opt/homebrew/opt/libomp/lib -lomp -lz"
         
-        export ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp"
-        export ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
+        #export ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp"
+        #export ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
+
+        export LDFLAGS="-L/opt/homebrew/opt/libomp/lib -lomp"
+        export CPPFLAGS="-I/opt/homebrew/opt/libomp/include"
 
         ./configure --prefix=${{ github.workspace }}/im_build \
                     --disable-silent-rules \
+                    --disable-dependency-tracking \
                     --disable-opencl \
                     --enable-shared \
                     --with-freetype=yes \
@@ -66,7 +70,9 @@ jobs:
                     --without-pango \
                     --without-wmf \
                     --enable-openmp=no \
-                    --without-x
+                    --without-x \
+                    ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp" \
+                    ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
                 
         make
         make install
