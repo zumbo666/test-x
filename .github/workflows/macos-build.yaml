@@ -69,8 +69,8 @@ jobs:
                     --without-fftw \
                     --without-pango \
                     --without-wmf \
-                    --enable-openmp=no \
                     --without-x \
+                    --enable-openmp \
                     ac_cv_prog_c_openmp="-Xpreprocessor -fopenmp" \
                     ac_cv_prog_cxx_openmp="-Xpreprocessor -fopenmp"
                 
