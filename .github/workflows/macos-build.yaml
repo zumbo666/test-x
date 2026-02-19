@@ -49,6 +49,7 @@ jobs:
 
         # Definiamo i path di Homebrew per Apple Silicon
         export OMP_PATH=$(brew --prefix libomp)
+        echo $OMP_PATH
 
         ./configure --prefix=${{ github.workspace }}/im_build \
                     --disable-silent-rules \
