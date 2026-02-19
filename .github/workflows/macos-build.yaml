@@ -51,6 +51,9 @@ jobs:
         export OMP_PATH=$(brew --prefix libomp)
         echo $OMP_PATH
 
+        sed -i '' 's/-fopenmp//g' $(brew --prefix libraw)/lib/pkgconfig/libraw.pc
+        sed -i '' 's/-fopenmp//g' $(brew --prefix libraw)/lib/pkgconfig/libraw_r.pc
+
         ./configure --prefix=${{ github.workspace }}/im_build \
                     --disable-silent-rules \
                     --disable-dependency-tracking \
