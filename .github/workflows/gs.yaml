@@ -22,7 +22,7 @@ jobs:
 
     - name: Copy Resources
       run: |
-        gs_ver=$(echo $(ls /opt/homebrew/Cellar/ghostscript/) | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+        gs_ver=$(echo $(ls /opt/homebrew/Cellar/ghostscript/) | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')_1
 
         tree /opt/homebrew/Cellar/ghostscript/
         
@@ -30,4 +30,4 @@ jobs:
         #cp -RPv ${{ github.workspace }}/im_build/etc/ImageMagick-7 converseen.app/Contents/Resources
         #cp -RPv /opt/homebrew/Cellar/ghostscript/$gs_ver/share/ghostscript converseen.app/Contents/Resources
 
-        ls /opt/homebrew/Cellar/ghostscript/$gs_ver_1/share/ghostscript
+        ls /opt/homebrew/Cellar/ghostscript/$gs_ver/share/ghostscript
