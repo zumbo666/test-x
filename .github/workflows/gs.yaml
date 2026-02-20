@@ -1,0 +1,31 @@
+name: Ghostscript
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  build-macos:
+    name: Ghostscript test
+    runs-on: macos-14
+
+    env:
+      BASE_DIR: ${{ github.workspace }}/im_build 
+      WORKING_DIR: ${{ github.workspace }}
+
+    steps:
+    - name: Install dependencies
+      run: |
+        set -e
+        
+        export HOMEBREW_NO_AUTO_UPDATE=1
+        brew install ghostscript tree
+
+    - name: Copy Resources
+      run: |
+        gs_ver=$(echo $(ls /opt/homebrew/Cellar/ghostscript/) | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+
+        tree /opt/homebrew/Cellar/ghostscript/
+        
+        #echo "--- Copying res files ---"
+        #cp -RPv ${{ github.workspace }}/im_build/etc/ImageMagick-7 converseen.app/Contents/Resources
+        #cp -RPv /opt/homebrew/Cellar/ghostscript/$gs_ver/share/ghostscript converseen.app/Contents/Resources
