@@ -193,7 +193,10 @@ jobs:
     - name: Test Converseen
       run: | 
         cd build/bin
-        ./converseen.app -p
+
+        ls
+        
+        ./converseen.app/Contents/MacOS/converseen
 
     - name: Compress Converseen
       run: |
