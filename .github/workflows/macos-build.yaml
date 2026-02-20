@@ -18,7 +18,7 @@ jobs:
         set -e
         
         export HOMEBREW_NO_AUTO_UPDATE=1
-        brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool libzip openexr openjpeg webp libraw ghostscript tree
+        brew install pkg-config freetype jpeg-turbo libheif libpng libtiff libtool libzip openexr openjpeg webp libraw ghostscript
 
     - name: Checkout Converseen
       uses: actions/checkout@v4
@@ -174,9 +174,7 @@ jobs:
     - name: Copy Resources
       run: |
         cd build/bin
-        gs_ver=$(echo $(ls /opt/homebrew/Cellar/ghostscript/) | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-
-        tree /opt/homebrew/Cellar/ghostscript/
+        gs_ver=$(echo $(ls /opt/homebrew/Cellar/ghostscript/) | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')_1
         
         echo "--- Copying res files ---"
         cp -RPv ${{ github.workspace }}/im_build/etc/ImageMagick-7 converseen.app/Contents/Resources
@@ -186,11 +184,16 @@ jobs:
         mkdir converseen.app/Contents/Resources/loc
         cp -RPv ../../converseen/loc/*.qm converseen.app/Contents/Resources/loc
 
-        echo "--- Rename Ghostscript Resource Dir ---"
-        cd converseen.app/Contents/Resources/ghostscript
+        # echo "--- Rename Ghostscript Resource Dir ---"
+        # cd converseen.app/Contents/Resources/ghostscript
         
-        gs_ver_t=$(echo $(ls) | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-        mv $gs_ver_t gs
+        # gs_ver_t=$(echo $(ls) | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')_1
+        # mv $gs_ver_t gs
+
+    - name: Test Converseen
+      run: | 
+        cd build/bin
+        ./converseen.app -p
 
     - name: Compress Converseen
       run: |
@@ -203,4 +206,3 @@ jobs:
       with:
         name: ConverseenMacOSIntel
         path: build/bin/converseen-${{ env.VERSION }}-${{ env.BUILD }}_beta_macos-x86_64.zip
-
