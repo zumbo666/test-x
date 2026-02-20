@@ -30,4 +30,4 @@ jobs:
         #cp -RPv ${{ github.workspace }}/im_build/etc/ImageMagick-7 converseen.app/Contents/Resources
         #cp -RPv /opt/homebrew/Cellar/ghostscript/$gs_ver/share/ghostscript converseen.app/Contents/Resources
 
-        ls /opt/homebrew/Cellar/ghostscript/$gs_ver/share/ghostscript
+        ls /opt/homebrew/Cellar/ghostscript/$gs_ver_1/share/ghostscript
