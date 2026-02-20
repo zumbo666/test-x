@@ -25,9 +25,17 @@ jobs:
         gs_ver=$(echo $(ls /opt/homebrew/Cellar/ghostscript/) | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')_1
 
         tree /opt/homebrew/Cellar/ghostscript/
-        
-        #echo "--- Copying res files ---"
-        #cp -RPv ${{ github.workspace }}/im_build/etc/ImageMagick-7 converseen.app/Contents/Resources
-        #cp -RPv /opt/homebrew/Cellar/ghostscript/$gs_ver/share/ghostscript converseen.app/Contents/Resources
-
         ls /opt/homebrew/Cellar/ghostscript/$gs_ver/share/ghostscript
+
+        mkdir testres
+        cp -RPv /opt/homebrew/Cellar/ghostscript/$gs_ver/share/ghostscript testres
+
+        cd testres/Contents/Resources/ghostscript
+        ls
+
+        gs_ver_t=$(echo $(ls) | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')_1
+        mv $gs_ver_t gs
+
+        ls
+        
+        
