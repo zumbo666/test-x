@@ -131,7 +131,8 @@ jobs:
             "/opt/homebrew/Cellar/webp",
             "/opt/homebrew/Cellar/x265",
             "/opt/homebrew/Cellar/xz",
-            "/opt/homebrew/Cellar/zstd"
+            "/opt/homebrew/Cellar/zstd",
+            "/opt/homebrew/Cellar/bzip2"
         ]
         
         # Function to find and copy symbolic links with a dylib extension
@@ -168,7 +169,7 @@ jobs:
 
         # Fix libzip rpaths
         cd converseen.app/Contents/Frameworks/
-        install_name_tool -change /usr/lib/libbz2.1.0.dylib @rpath/libbz2.1.0.dylib libzip.5.dylib
+        # install_name_tool -change /usr/lib/libbz2.1.0.dylib @rpath/libbz2.1.0.dylib libzip.5.dylib
         install_name_tool -change @loader_path/../../../../opt/xz/lib/liblzma.5.dylib @rpath/liblzma.5.dylib libzip.5.dylib
         install_name_tool -change @loader_path/../../../../opt/zstd/lib/libzstd.1.dylib @rpath/libzstd.1.dylib libzip.5.dylib
 
