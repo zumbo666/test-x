@@ -106,7 +106,7 @@ jobs:
 
     - name: Test Converseen
       run: | 
-        cd build/install
+        cd Converseen/build/install
 
         ls
         
@@ -114,7 +114,7 @@ jobs:
 
     - name: Compress Converseen
       run: |
-        cd build/bin
+        cd Converseen/build/install
         zip -r --symlinks -9 converseen-${{ env.VERSION }}-${{ env.BUILD }}_beta_macos-x86_64.zip converseen.app
         pwd
 
