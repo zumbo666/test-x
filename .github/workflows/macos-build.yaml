@@ -39,11 +39,18 @@ jobs:
         export CXXFLAGS="-O2"
         export LDFLAGS="-Wl,-headerpad_max_install_names -Wl,-headerpad,0x2000"
 
-        GS_PATH=$(brew --prefix ghostscript)
-
-        export LDFLAGS="-L$GS_PATH/lib:$LDFLAGS"
-        export CPPFLAGS="-I$GS_PATH/include"
-        export PKG_CONFIG_PATH="$GS_PATH/lib/pkgconfig:$PKG_CONFIG_PATH"
+        # Definiamo i prefissi per chiarezza
+        PREFIX=$(brew --prefix)
+        GS_PREFIX=$(brew --prefix ghostscript)
+    
+        # Esportiamo le variabili per il compilatore e il linker
+        export PKG_CONFIG_PATH="$GS_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+        export LDFLAGS="-L$GS_PREFIX/lib -L$PREFIX/lib -Wl,-rpath,$GS_PREFIX/lib:$LDFLAGS"
+        export CPPFLAGS="-I$GS_PREFIX/include -I$PREFIX/include"
+        
+        # Queste sono fondamentali per i "test" del configure su Apple Silicon
+        export LIBRARY_PATH="$GS_PREFIX/lib:$PREFIX/lib"
+        export CPATH="$GS_PREFIX/include:$PREFIX/include"
 
         # Fix openmp compile error with libraw
         sed -i '' 's/-fopenmp//g' $(brew --prefix libraw)/lib/pkgconfig/libraw.pc
@@ -72,7 +79,8 @@ jobs:
                     --without-pango \
                     --without-wmf \
                     --without-x \
-                    --disable-openmp
+                    --disable-openmp \
+                    --with-pkg-config-libdir="$GS_PREFIX/lib/pkgconfig"
 
         make
         make install
