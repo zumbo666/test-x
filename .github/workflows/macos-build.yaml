@@ -39,6 +39,12 @@ jobs:
         export CXXFLAGS="-O2"
         export LDFLAGS="-Wl,-headerpad_max_install_names -Wl,-headerpad,0x2000"
 
+        GS_PATH=$(brew --prefix ghostscript)
+
+        export LDFLAGS="-L$GS_PATH/lib:$LDFLAGS"
+        export CPPFLAGS="-I$GS_PATH/include"
+        export PKG_CONFIG_PATH="$GS_PATH/lib/pkgconfig:$PKG_CONFIG_PATH"
+
         # Fix openmp compile error with libraw
         sed -i '' 's/-fopenmp//g' $(brew --prefix libraw)/lib/pkgconfig/libraw.pc
         sed -i '' 's/-fopenmp//g' $(brew --prefix libraw)/lib/pkgconfig/libraw_r.pc
