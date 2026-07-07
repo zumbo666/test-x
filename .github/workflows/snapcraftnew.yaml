@@ -1,0 +1,38 @@
+name: New Snap
+
+on:
+  workflow_dispatch:
+
+env:
+  APPIMAGE_DIR: "package/AppImage"
+  IM_REPO: "https://github.com/ImageMagick/ImageMagick/releases/download/"
+  
+jobs:
+  snap-build:
+    name: Converseen Snap Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Converseen
+      uses: actions/checkout@v4
+      with:
+        repository: Faster3ck/Converseen
+        path: Converseen
+    
+    - name: Package snap with Snapcraft
+      id: snapcraft
+      uses: canonical/craft-actions/snapcraft/pack@main
+      with:
+        # Opzionale: puoi scegliere quale canale di snapcraft usare (es. candidate, beta)
+        channel: 'latest/stable'
+        
+        # Opzionale: il livello di verbosità dei log (quiet, brief, verbose, debug, trace)
+        verbosity: 'verbose'
+        
+        # Opzionale: se il file snapcraft.yaml non è nella root del progetto
+        path: 'Converseen/package/Snap' 
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: my-snap
+        path: ${{ steps.snapcraft.outputs.snap }}  # L'azione espone l'output del percorso esatto...
