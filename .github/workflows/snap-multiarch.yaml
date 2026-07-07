@@ -1,0 +1,48 @@
+name: Multi-Arch Snap
+
+on:
+  workflow_dispatch:
+
+env:
+  APPIMAGE_DIR: "package/AppImage"
+  IM_REPO: "https://github.com/ImageMagick/ImageMagick/releases/download/"
+  QT_QPA_PLATFORM: offscreen
+
+jobs:
+  snap-build:
+    name: Converseen Snap Build (${{ matrix.architecture }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        architecture: [amd64, arm64]
+
+    steps:
+    - name: Checkout Converseen
+      uses: actions/checkout@v4
+      with:
+        repository: Faster3ck/Converseen
+
+    # Setup arm64 machine
+    - name: Set up QEMU
+      if: matrix.architecture == 'arm64'
+      uses: docker/setup-qemu-action@v3
+
+    - name: Build Snap
+      uses: snapcore/action-build@v1
+      id: snapcraft
+      with:
+        path: package/Snap
+        architecture: ${{ matrix.architecture }}
+
+    - name: Snap Test Run
+      if: matrix.architecture == 'amd64'
+      run: |
+        sudo snap install --dangerous ${{ steps.snapcraft.outputs.snap }}
+        converseen -p
+    
+    - uses: actions/upload-artifact@v4
+      with:
+          name: snap-${{ matrix.architecture }}
+          path: ${{ steps.snapcraft.outputs.snap }}
+          
