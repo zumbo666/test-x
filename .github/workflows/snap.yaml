@@ -6,7 +6,8 @@ on:
 env:
   APPIMAGE_DIR: "package/AppImage"
   IM_REPO: "https://github.com/ImageMagick/ImageMagick/releases/download/"
-  
+  QT_QPA_PLATFORM: offscreen
+
 jobs:
   snap-build:
     name: Converseen Snap Build
