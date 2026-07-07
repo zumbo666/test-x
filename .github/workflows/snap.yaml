@@ -1,0 +1,39 @@
+name: New Snap
+
+on:
+  workflow_dispatch:
+
+env:
+  APPIMAGE_DIR: "package/AppImage"
+  IM_REPO: "https://github.com/ImageMagick/ImageMagick/releases/download/"
+  
+jobs:
+  snap-build:
+    name: Converseen Snap Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Converseen
+      uses: actions/checkout@v4
+      with:
+        repository: Faster3ck/Converseen
+
+    - name: Build Snap
+      uses: snapcore/action-build@v1
+      id: snapcraft
+      with:
+        path: package/Snap
+    
+    - name: Snap Test Run
+      run: |
+        pwd
+        ls
+      
+        cd package/Snap
+        sudo snap install --dangerous ${{ steps.snapcraft.outputs.snap }}
+        converseen -p
+    
+    - uses: actions/upload-artifact@v3
+      with:
+          name: snap
+          path: "package/Snap/${{ steps.snapcraft.outputs.snap }}"
+    
