@@ -2,6 +2,12 @@
 name: Windows Test Build
 on:
   workflow_dispatch:
+
+env:
+  APPIMAGE_DIR: "package/AppImage"
+  IM_REPO: "https://github.com/ImageMagick/ImageMagick/releases/download/"
+  QT_QPA_PLATFORM: offscreen
+
 jobs:
   build-windows:
     name: Converseen Windows Build
@@ -15,26 +21,36 @@ jobs:
             vs_arch: 'x86'
             bits: '32bit'
             cmake_extra_flags: ''
-          - qt_version: '6.9.1'
+          - qt_version: '6.11.1'
             qt_arch: 'win64_msvc2022_64'
             imagemagick_arch: 'x64'
             vs_arch: 'x64'
             bits: '64bit'
+            cmake_extra_flags: '-DUSE_QT6=yes'
+          - qt_version: '6.11.1'
+            qt_arch: 'win64_msvc2022_arm64'
+            imagemagick_arch: 'x64'
+            vs_arch: 'x64_arm64'
+            bits: 'arm64'
             cmake_extra_flags: '-DUSE_QT6=yes'
     
     steps:
       - name: Download ImageMagick for Windows (${{ matrix.bits }})
         shell: powershell
         run: |
-          # Get latest version number from GitHub
-          $gitTags = git ls-remote --sort="version:refname" --tags https://github.com/ImageMagick/ImageMagick.git
-          $lastTagLine = $gitTags[-1]
-          $lastTagVersion = $lastTagLine -replace '.*?(\d+\.\d+\.\d+-\d+).*', '$1'
-          $latestVersionNumber = $lastTagVersion
-          
-          Write-Host "Latest ImageMagick Version Found: $latestVersionNumber"
-          
-          Invoke-WebRequest -Uri "https://imagemagick.org/archive/binaries/ImageMagick-$latestVersionNumber-Q16-HDRI-${{ matrix.imagemagick_arch }}-dll.exe" -OutFile ImageMagick-Installer.exe
+            # Get latest version number from GitHub
+            $gitTags = git ls-remote --sort="version:refname" --tags https://github.com/ImageMagick/ImageMagick.git
+            $lastTagLine = $gitTags[-1]
+            $lastTagVersion = $lastTagLine -replace '.*?(\d+\.\d+\.\d+-\d+).*', '$1'
+            $latestVersionNumber = $lastTagVersion
+            
+            Write-Host "Latest ImageMagick Version Found: $latestVersionNumber"
+  
+            $downloadUrl = "$($env:IM_REPO)$latestVersionNumber/ImageMagick-$latestVersionNumber-Q16-HDRI-${{ matrix.imagemagick_arch }}-dll.exe"
+            Write-Host "Downloading from: $downloadUrl"
+  
+            # Download ImageMagick for Windows
+            Invoke-WebRequest -Uri $downloadUrl -OutFile ImageMagick-Installer.exe
       
       - name: Install ImageMagick for Windows (${{ matrix.bits }})
         shell: cmd
@@ -57,6 +73,7 @@ jobs:
           arch: '${{ matrix.qt_arch }}'
           install-deps: 'true'
           set-env: 'true'
+          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@refs/pull/1000/head' # For Qt 6.11.* support (not included in the latest release yet)
       
       - name: Build Converseen (Qt ${{ matrix.qt_version }} ${{ matrix.bits }})
         shell: cmd
@@ -81,8 +98,18 @@ jobs:
           cp Converseen/build/package/*.msi artifacts-qt${{ matrix.qt_version }}-${{ matrix.bits }}/
           cp Converseen/build/package/*.zip artifacts-qt${{ matrix.qt_version }}-${{ matrix.bits }}/
           ls artifacts-qt${{ matrix.qt_version }}-${{ matrix.bits }}
+
+      - name: Windows Test Run
+        shell: powershell
+        run: |
+          cd Converseen/build/package
+          
+          Expand-Archive -Path "Converseen.zip" -DestinationPath "."
+          cd Converseen
+          
+          .\converseen.exe -p
       
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Windows-Qt${{ matrix.qt_version }}-${{ matrix.bits }}
           path: 'artifacts-qt${{ matrix.qt_version }}-${{ matrix.bits }}'
