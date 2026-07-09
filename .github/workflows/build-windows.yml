@@ -59,9 +59,11 @@ jobs:
         shell: cmd
         run: |
           ImageMagick-Installer.exe /MERGETASKS=install_devel /VERYSILENT /DIR=ImageMagick
+
+          ls "${{ github.workspace }}\ImageMagick"
     
       - name: Checkout Converseen
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: Converseen
           repository: Faster3ck/Converseen
