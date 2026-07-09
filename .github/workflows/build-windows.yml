@@ -89,7 +89,7 @@ jobs:
           mkdir build
           cd build
       
-          cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE:STRING=Release -DImageMagick_EXECUTABLE_DIR="${{ github.workspace }}\ImageMagick" ${{ matrix.cmake_extra_flags }} ..
+          cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE:STRING=Release -DImageMagick_ROOT="${{ github.workspace }}\ImageMagick" ${{ matrix.cmake_extra_flags }} ..
           nmake
           cpack -B package
       
