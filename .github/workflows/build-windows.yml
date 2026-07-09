@@ -35,7 +35,7 @@ jobs:
             vs_host_arch: 'x64'
             vs_arch: 'arm64'
             bits: 'arm64'
-            cmake_extra_flags: '-DUSE_QT6=yes'
+            cmake_extra_flags: '-DUSE_QT6=yes -DCMAKE_SYSTEM_PROCESSOR=ARM64'
     
     steps:
       - name: Download ImageMagick for Windows (${{ matrix.bits }})
@@ -89,7 +89,7 @@ jobs:
           mkdir build
           cd build
       
-          cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE:STRING=Release -DImageMagick_ROOT="${{ github.workspace }}\ImageMagick" ${{ matrix.cmake_extra_flags }} ..
+          cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE:STRING=Release -DImageMagick_ROOT="${{ github.workspace }}\ImageMagick" -DImageMagick_EXECUTABLE_DIR="${{ github.workspace }}\ImageMagick" ${{ matrix.cmake_extra_flags }} ..
           nmake
           cpack -B package
       
