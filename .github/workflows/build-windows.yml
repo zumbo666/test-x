@@ -88,6 +88,8 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -host_arch=${{ matrix.vs_host_arch }} -arch=${{ matrix.vs_arch }}
+
+          set PATH=%GITHUB_WORKSPACE%\ImageMagick;%PATH%
           
           cd Converseen
           mkdir build
