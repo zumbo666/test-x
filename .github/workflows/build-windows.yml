@@ -63,6 +63,7 @@ jobs:
       - name: Checkout Converseen
         uses: actions/checkout@v6
         with:
+          repository: Faster3ck/Converseen
           path: Converseen
       
       - name: Install Qt ${{ matrix.qt_version }} (${{ matrix.bits }})
