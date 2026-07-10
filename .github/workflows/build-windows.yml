@@ -33,7 +33,7 @@ jobs:
             qt_arch: 'win64_msvc2022_arm64_cross_compiled'
             imagemagick_arch: 'arm64'
             vs_host_arch: 'x64'
-            vs_arch: 'arm64'
+            vs_arch: 'amd64_arm64'
             bits: 'arm64'
             cmake_extra_flags: '-DUSE_QT6=yes'
     
@@ -83,11 +83,16 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://download.firedaemon.com/FireDaemon-OpenSSL/openssl-1.1.1w.zip" -OutFile "openssl-1.1.1w.zip"
           Expand-Archive -Path "openssl-1.1.1w.zip" -DestinationPath . -Force
+
+      - name: Setup MSVC Environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.vs_arch }}
           
       - name: Build Converseen (Qt ${{ matrix.qt_version }} ${{ matrix.bits }})
         shell: cmd
         run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -host_arch=${{ matrix.vs_host_arch }} -arch=${{ matrix.vs_arch }}
+          # call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -host_arch=${{ matrix.vs_host_arch }} -arch=${{ matrix.vs_arch }}
 
           # set PATH=%GITHUB_WORKSPACE%\ImageMagick;%PATH%
           
