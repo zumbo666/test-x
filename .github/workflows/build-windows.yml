@@ -66,6 +66,7 @@ jobs:
           repository: Faster3ck/Converseen
           path: Converseen
       
+      # 1. Installazione dell'architettura principale definita nella matrix (sarà ARM64 nel caso specifico)
       - name: Install Qt ${{ matrix.qt_version }} (${{ matrix.bits }})
         uses: jurplel/install-qt-action@v4
         with:
@@ -75,7 +76,20 @@ jobs:
           arch: '${{ matrix.qt_arch }}'
           install-deps: 'true'
           set-env: 'true'
-          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@refs/pull/1000/head' # For Qt 6.11.* support (not included in the latest release yet)
+          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@refs/pull/1000/head'
+
+      # 2. Installazione condizionale di Qt6 x64 (solo se stiamo cross-compilando per ARM64)
+      - name: Install Extra Qt6 x64 Host Tools (ARM64 Cross-Compile Only)
+        if: matrix.bits == 'arm64'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '${{ matrix.qt_version }}'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2022_64' # Forza l'installazione della versione x64 nativa
+          install-deps: 'false'      # Le dipendenze generiche di sistema ci sono già
+          set-env: 'false'          # IMPORTANTE: lasciamo false per non sovrascrivere le variabili d'ambiente di ARM64
+          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@refs/pull/1000/head'
 
       - name: Download OpenSSL (32 bit only)
         shell: powershell
