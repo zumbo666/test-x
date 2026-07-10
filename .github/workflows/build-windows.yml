@@ -120,6 +120,7 @@ jobs:
            -DImageMagick_Magick++_LIBRARY="${{ github.workspace }}\ImageMagick\lib\CORE_RL_Magick++_.lib" ^
            -DImageMagick_MagickWand_LIBRARY="${{ github.workspace }}\ImageMagick\lib\CORE_RL_MagickWand_.lib" ^
            -DImageMagick_MagickCore_LIBRARY="${{ github.workspace }}\ImageMagick\lib\CORE_RL_MagickCore_.lib" ^
+           -DImageMagick_EXECUTABLE_DIR="${{ github.workspace }}\ImageMagick" ^
            ${{ matrix.cmake_extra_flags }} ..
  
           nmake
